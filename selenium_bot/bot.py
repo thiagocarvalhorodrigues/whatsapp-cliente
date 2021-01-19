@@ -53,6 +53,8 @@ class wppbot:
     def configurar_caminho_do_profile(self, numero_da_conta=None):
         return self.dir_path + f"\profiles\{numero_da_conta}\wpp"
 
+
+
     def send_msg(self,site,template_response):
         db = TinyDB('db.json')
         self.driver.get(site)
@@ -367,6 +369,13 @@ class wppbot:
         enviar = self.driver.find_element_by_xpath( '//*[@id="app"]/div/div/div[2]/div[2]/span/div/span/div/div/div[2]/span/div')
         enviar.click()
         time.sleep(2)
+
+
+
+
+
+
+
 
 
 

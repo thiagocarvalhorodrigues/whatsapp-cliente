@@ -40,7 +40,7 @@ def send_msg_thread(lista_contatos, text_string, response, dinamico_foto, dinami
 
 #####JANELA DA CONFIGURAÇÃO DO QRCODE #####
 def configure_qrcode_thread(dinamico_qrcode):
-    numero_da_conta = ("991938533")
+    numero_da_conta = ("1234")
     bot = wppbot(minimizer=False, file_qrcode=dinamico_qrcode, numero_da_conta=numero_da_conta)
     bot.configure_qrcode()
 
