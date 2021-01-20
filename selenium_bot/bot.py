@@ -30,16 +30,19 @@ class wppbot:
         self.file_escuta_positiva = file_escuta_positiva
         self.file_escuta_negativa = file_escuta_negativa
         self.numero_da_conta = numero_da_conta
-        self.driver = self.configurar_driver(minimizer, self.numero_da_conta)
+        self.driver = self.configurar_driver(minimizer)
         self.file_qrcode = file_qrcode
         self.file_qrcode_range = self.file_qrcode
 
 
-    def configurar_driver(self, minimizer=False, numero_da_conta=None):
+
+
+
+
+    def configurar_driver(self, minimizer=False):
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--silent ')
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.options.add_argument(r"user-data-dir=" + self.configurar_caminho_do_profile(numero_da_conta))
         self.options.add_argument('--log-level=3')
         self.options.add_argument('--lang=pt-BR')
         self.verificando_profile()
@@ -51,10 +54,20 @@ class wppbot:
             self.options.add_argument("--start-maximized")
             self.options.add_argument("--window-position=10,10")
             self.options.add_argument('--lang=pt-BR')
-        return webdriver.Chrome(executable_path=r'./driver/chromedriver', chrome_options=self.options)
 
-    def configurar_caminho_do_profile(self, numero_da_conta=None):
-        return self.dir_path + f"/profiles/{numero_da_conta}/wpp"
+        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
+
+    def configurar_caminho_do_profile(self):
+        db_profiles = bancodedados(numero_da_conta=self.numero_da_conta)
+        resultado = db_profiles.encontrado()
+        self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.numero_da_conta}\wpp')
+
+        if self.numero_da_conta == resultado:
+            print(resultado,"thiago")
+
+        else:
+            print("Irá criar o Profile")
+            return self.caminho
 
 
 
@@ -374,8 +387,9 @@ class wppbot:
         time.sleep(2)
 
     def verificando_profile(self):
-        proprofile = bancodedados(numero_da_conta=self.numero_da_conta)
-        proprofile.search()
+        profile = bancodedados(numero_da_conta=self.numero_da_conta)
+        profile.search_insert()
+        self.configurar_caminho_do_profile()
 
 
 

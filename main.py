@@ -120,7 +120,6 @@ while True:
     arquivo_escuta_negativa = (values['escuta_negativa'])
     arquivo_qrcode = int((values['qrcode']))
     arquivo_profile_n1 = (values['n1'])
-    print("Print - Main",arquivo_profile_n1)
 
 
 
@@ -141,7 +140,7 @@ while True:
 
     if event == 'remover':
         try:
-            shutil.rmtree('profile', ignore_errors=False, onerror=None)
+            shutil.rmtree('profiles', ignore_errors=False, onerror=None)
         except:
             pass
     if event == 'responder':
