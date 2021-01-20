@@ -5,7 +5,7 @@ from threading import Thread
 import shutil
 # import pygame
 # pygame.init()
-# pygame.mixer.music.load("musica.mp3")
+# pygame.mixer.music.load("musica.ogg")
 # pygame.mixer.music.play()
 # pygame.event.wait()
 
@@ -20,7 +20,7 @@ menu_tela_inicial = [
 
     ]
 
-layout =    [[sg.Image('recursos\imagens\Logo700x100.png')],
+layout =    [[sg.Image('recursos/imagens/Logo700x100.png')],
             [sg.Menu(menu_tela_inicial)],
             [sg.Button('Configurar QRCode',button_color=(background_fonte,background_fundo), key='configurar'), sg.Button('Remover QRCode', button_color=(background_fonte,background_fundo), key='remover')],
             [sg.Text('Arquivo de Entrada ( números a serem disparados)  CSV:',text_color=background_fonte, background_color='#3CB371', font=('Arial', 10, 'bold'))],
@@ -41,7 +41,7 @@ layout =    [[sg.Image('recursos\imagens\Logo700x100.png')],
             [sg.Button('Iniciar', button_color=(background_fonte,background_fundo), key='iniciar'), sg.Button('Responder', button_color=(background_fonte,background_fundo), key='responder'),sg.Text('                  ', background_color='#3CB371', key='status')]]
 
 
-layout2 = [[sg.Image('recursos\imagens\convertido.png')],
+layout2 = [[sg.Image('recursos/imagens/convertido.png')],
     [sg.Text('Quantas contas desejar Abrir?', text_color=background_fonte,background_color='#3CB371', font=('Arial', 10, 'bold'))],
     [sg.Slider(range=(1,10),default_value=1, background_color=background_fonte, text_color='#3CB371' ,orientation='h', key='qrcode')],
     [sg.Text("Informe os números que deseja enviar as mensagens", text_color=background_fonte, background_color='#3CB371', font=('Arial',10, 'bold'))],
@@ -119,6 +119,8 @@ while True:
     arquivo_escuta_positiva = (values['escuta_positiva'])
     arquivo_escuta_negativa = (values['escuta_negativa'])
     arquivo_qrcode = int((values['qrcode']))
+    arquivo_profile_n1 = (values['n1'])
+    print("Print - Main",arquivo_profile_n1)
 
 
 
@@ -134,7 +136,7 @@ while True:
         Thread(target=send_msg_thread, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, window, ), daemon=True).start()
 
     if event == 'configurar':
-        Thread(target=configure_qrcode_thread, args=[arquivo_qrcode], daemon=True).start()
+        Thread(target=configure_qrcode_thread, args=[arquivo_qrcode, arquivo_profile_n1], daemon=True).start()
 
 
     if event == 'remover':

@@ -7,6 +7,7 @@ from selenium import webdriver
 import openpyxl
 import csv
 import pyautogui
+from banco_profile.db import bancodedados
 
 ###### INICIANDO O CHROMEDRIVER #######
 
@@ -28,7 +29,8 @@ class wppbot:
         self.file_foto_resposta = file_foto_resposta
         self.file_escuta_positiva = file_escuta_positiva
         self.file_escuta_negativa = file_escuta_negativa
-        self.driver = self.configurar_driver(minimizer, numero_da_conta)
+        self.numero_da_conta = numero_da_conta
+        self.driver = self.configurar_driver(minimizer, self.numero_da_conta)
         self.file_qrcode = file_qrcode
         self.file_qrcode_range = self.file_qrcode
 
@@ -40,6 +42,7 @@ class wppbot:
         self.options.add_argument(r"user-data-dir=" + self.configurar_caminho_do_profile(numero_da_conta))
         self.options.add_argument('--log-level=3')
         self.options.add_argument('--lang=pt-BR')
+        self.verificando_profile()
 
         if minimizer == True:
             self.options.add_argument("--start-minimized")
@@ -48,10 +51,10 @@ class wppbot:
             self.options.add_argument("--start-maximized")
             self.options.add_argument("--window-position=10,10")
             self.options.add_argument('--lang=pt-BR')
-        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
+        return webdriver.Chrome(executable_path=r'./driver/chromedriver', chrome_options=self.options)
 
     def configurar_caminho_do_profile(self, numero_da_conta=None):
-        return self.dir_path + f"\profiles\{numero_da_conta}\wpp"
+        return self.dir_path + f"/profiles/{numero_da_conta}/wpp"
 
 
 
@@ -369,6 +372,14 @@ class wppbot:
         enviar = self.driver.find_element_by_xpath( '//*[@id="app"]/div/div/div[2]/div[2]/span/div/span/div/div/div[2]/span/div')
         enviar.click()
         time.sleep(2)
+
+    def verificando_profile(self):
+        proprofile = bancodedados(numero_da_conta=self.numero_da_conta)
+        proprofile.search()
+
+
+
+
 
 
 

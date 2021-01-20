@@ -1,30 +1,32 @@
 from tinydb import TinyDB, Query
+
 banco = TinyDB('profile.json')
 User = Query()
 
+class bancodedados:
+     def __init__(self,numero_da_conta):
+          self.numero_da_conta = numero_da_conta
 
-def insert():
+     def insert(self):
 
-     banco.insert({'nome':'Joao', 'idade':33})
-     banco.insert({'nome':'Vitor', 'idade':36})
-
-def search():
-     pesquisa =('Joao')
-
-     resultado = banco.search(User.nome == (pesquisa))
-     for i in resultado:
-          if i['nome'] == pesquisa:
-               print(i)
+          banco.insert({'celular':self.pesquisa})
 
 
+     def search(self):
 
+          self.pesquisa = self.numero_da_conta
+          print("Print - db.py",(self.pesquisa))
 
-
-
-
+          resultado = banco.search(User.nome == (self.pesquisa))
+          try:
+               if self.pesquisa == str(resultado[0]['celular']):
+                    print("Encontrado --->", resultado[0]['celular'],"----->",resultado)
+          except:
+               print("Não encontrado")
+               self.insert()
 
 
 # insert()
-search()
+# search()
 # print(banco.all())
 
