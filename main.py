@@ -4,6 +4,7 @@ from threadd.thread_manager import send_msg_thread, configure_qrcode_thread, ver
 from threading import Thread
 from banco_profile import db
 import shutil
+from banco_profile.deletando import deletar
 # import pygame
 # pygame.init()
 # pygame.mixer.music.load("musica.ogg")
@@ -20,6 +21,7 @@ menu_tela_inicial = [
     ['Contato',['Sobre']]
 
     ]
+
 
 layout =    [[sg.Image('recursos/imagens/Logo700x100.png')],
             [sg.Menu(menu_tela_inicial)],
@@ -41,39 +43,44 @@ layout =    [[sg.Image('recursos/imagens/Logo700x100.png')],
             [sg.Multiline(size=(30, 2), key='replica_negativa')],
             [sg.Button('Iniciar', button_color=(background_fonte,background_fundo), key='iniciar'), sg.Button('Responder', button_color=(background_fonte,background_fundo), key='responder'),sg.Text('                  ', background_color='#3CB371', key='status')]]
 
-dados = db.bancodedados(numero_da_conta='00000000')
-select_dos_numeros_cadastrados = dados.select_all()
+
+global valor_do_input
+dados = db.bancodedados(numero_da_conta='0')
+(select_dos_numeros_cadastrados) = (dados.select_all())
 print(select_dos_numeros_cadastrados)
 
+
 layout2 = [[sg.Image('recursos/imagens/convertido.png')],
-    [sg.Text('Quantas contas desejar Abrir?', text_color=background_fonte,background_color='#3CB371', font=('Arial', 10, 'bold'))],
-    [sg.Slider(range=(1,10),default_value=1, background_color=background_fonte, text_color='#3CB371' ,orientation='h', key='qrcode')],
-    [sg.Text("Informe os números que deseja enviar as mensagens", text_color=background_fonte, background_color='#3CB371', font=('Arial',10, 'bold'))],
-    [sg.Text("1º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
-    [sg.Input(select_dos_numeros_cadastrados[0]['celular'], key="n1",size=(13,1))],
-    [sg.Text("2º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
-    [sg.Input(select_dos_numeros_cadastrados[1]['celular'], key="n2",size=(13, 1))],
-    [sg.Text("3º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
-    [sg.Input(key="n3",size=(13, 1))],
-    [sg.Text("4º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-    [sg.Input(key="n4",size=(13, 1))],
-    [sg.Text("5º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)),sg.Text("          ", background_color='#3CB371'), sg.Button('Excluir QRCode Indivídual',button_color=(background_fonte,background_fundo), key='botao_excluir_individual')],
-    [sg.Input(key="n5",size=(13, 1)),sg.Text("                ", background_color='#3CB371'),  sg.Input(key="input_excluir_individual",size=(10,1))],
-    [sg.Text("6º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)), sg.Text("                         ex: n1 - n2",text_color=background_fonte,background_color='#3CB371')],
-    [sg.Input(key="n6",size=(13, 1))],
-    [sg.Text("7º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-    [sg.Input(key="n7",size=(13, 1))],
-    [sg.Text("8º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-    [sg.Input(key="n8",size=(13, 1))],
-    [sg.Text("9º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-    [sg.Input(key="n9",size=(13, 1))],
-    [sg.Text("10º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-    [sg.Input(key="n10",size=(13, 1))],
-    [sg.Text("11º Número", text_color=background_fonte, background_color='#3CB371', font=('Arial', 12))],
+        [sg.Text('Quantas contas desejar Abrir?', text_color=background_fonte,background_color='#3CB371', font=('Arial', 10, 'bold'))],
+        [sg.Slider(range=(1,10),default_value=1, background_color=background_fonte, text_color='#3CB371' ,orientation='h', key='qrcode')],
+        [sg.Text("Informe os números que deseja enviar as mensagens", text_color=background_fonte, background_color='#3CB371', font=('Arial',10, 'bold'))],
+        [sg.Text("1º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
+        [sg.Input(select_dos_numeros_cadastrados[0]['celular'], key="n1",size=(13,1))],
+        [sg.Text("2º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
+        [sg.Input(select_dos_numeros_cadastrados[1]['celular'], key="n2",size=(13, 1))],
+        [sg.Text("3º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
+        [sg.Input(select_dos_numeros_cadastrados[2]['celular'],key="n3",size=(13, 1))],
+        [sg.Text("4º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
+        [sg.Input(select_dos_numeros_cadastrados[3]['celular'],key="n4",size=(13, 1))],
+        [sg.Text("5º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)),sg.Text("          ", background_color='#3CB371'), sg.Button('Excluir QRCode Indivídual',button_color=(background_fonte,background_fundo), key='botao_excluir_individual')],
+        [sg.Input(select_dos_numeros_cadastrados[4]['celular'],key="n5",size=(13, 1)),sg.Text("                ", background_color='#3CB371'),  sg.Input(key="input_excluir_individual",size=(10,1))],
+        [sg.Text("6º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)), sg.Text("                         ex: n1 - n2",text_color=background_fonte,background_color='#3CB371')],
+        [sg.Input(select_dos_numeros_cadastrados[5]['celular'],key="n6",size=(13, 1))],
+        [sg.Text("7º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
+        [sg.Input(select_dos_numeros_cadastrados[6]['celular'],key="n7",size=(13, 1))],
+        [sg.Text("8º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
+        [sg.Input(select_dos_numeros_cadastrados[7]['celular'],key="n8",size=(13, 1))],
+        [sg.Text("9º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
+        [sg.Input(select_dos_numeros_cadastrados[8]['celular'],key="n9",size=(13, 1))],
+        [sg.Text("10º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
+        [sg.Input(select_dos_numeros_cadastrados[9]['celular'],key="n10",size=(13, 1))]
 
 
 
-]
+
+    ]
+
+
 
 layout3 = [
     [sg.Text('Enviar SPAM?                                      Preencher SAUDAÇÃO e RESPOSTA.', background_color='#34af23')],
@@ -110,6 +117,7 @@ while True:
     if event in (None, 'Close Window'):
 
 
+
         window.close()
         break
 
@@ -125,6 +133,8 @@ while True:
     arquivo_escuta_negativa = (values['escuta_negativa'])
     arquivo_qrcode = int((values['qrcode']))
     arquivo_profile_n1 = (values['n1'])
+    valor_do_input = (values['input_excluir_individual'])
+
 
 
 
@@ -157,4 +167,12 @@ while True:
         sg.Popup("Whatsbot - Protótipo")
 
     if event == "Sobre":
-        sg.Popup("Somos a empresa Ok - Tecnologia, especializada em Softwares e Sites em geral. Contato: 48 - 991938533")
+        sg.Popup("Somos a empresa Ok - Tecnologia, especializada em Softwares e Sites em geral. Contato: (Telefone da OK Tecnologia)")
+
+    if event == 'botao_excluir_individual':
+        excluindo_chave = deletar(chave=valor_do_input)
+        excluindo_chave.delete()
+        sg.Popup("Excluido")
+
+    if event == "Excluido":
+        print("Coisa linda")

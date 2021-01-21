@@ -1,11 +1,12 @@
 from tinydb import TinyDB, Query
 
 class bancodedados:
-     banco = TinyDB('banco_profile/profile.json')
+     banco = TinyDB('banco_profile\profile.json')
      User = Query()
 
      def __init__(self,numero_da_conta):
           self.numero_da_conta = numero_da_conta
+
 
 
 
@@ -44,6 +45,12 @@ class bancodedados:
 
      def select_all(self):
            return self.banco.all()
+
+    ##### Não está sendo utilizando no momento #####
+     def delete(self):
+          return self.banco.remove(self.User.celular == self.chave)
+
+
 
 
 
