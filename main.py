@@ -44,7 +44,7 @@ layout =    [[sg.Image('recursos/imagens/Logo700x100.png')],
             [sg.Button('Iniciar', button_color=(background_fonte,background_fundo), key='iniciar'), sg.Button('Responder', button_color=(background_fonte,background_fundo), key='responder'),sg.Text('                  ', background_color='#3CB371', key='status')]]
 
 
-global valor_do_input
+
 dados = db.bancodedados(numero_da_conta='0')
 (select_dos_numeros_cadastrados) = (dados.select_all())
 print(select_dos_numeros_cadastrados)
@@ -174,5 +174,4 @@ while True:
         excluindo_chave.delete()
         sg.Popup("Excluido")
 
-    if event == "Excluido":
-        print("Coisa linda")
+
