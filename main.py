@@ -5,26 +5,31 @@ from threading import Thread
 from banco_profile import db
 import shutil
 from banco_profile.deletando import deletar
+
+import os.path
+
+
 # import pygame
 # pygame.init()
 # pygame.mixer.music.load("musica.ogg")
 # pygame.mixer.music.play()
 # pygame.event.wait()
-
+dir_path = os.getcwd()
 sg.theme('TanBlue')
 background_fundo = '#FF4500'
 background_fonte = '#FFFAFA'
 
 
 menu_tela_inicial = [
-    ['Ajuda',[ 'Versão']],
+    ['Ajuda',[ 'Versão','Tutorial']],
     ['Contato',['Sobre']]
 
     ]
+layout12 = [[sg.Image('recursos/imagens/convertido1100px.png')],
 
-
-layout =    [[sg.Image('recursos/imagens/Logo700x100.png')],
-            [sg.Menu(menu_tela_inicial)],
+]
+# [[sg.Image('recursos/imagens/Logo700x100.png')],
+layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Button('Configurar QRCode',button_color=(background_fonte,background_fundo), key='configurar'), sg.Button('Remover QRCode', button_color=(background_fonte,background_fundo), key='remover')],
             [sg.Text('Arquivo de Entrada ( números a serem disparados)  CSV:',text_color=background_fonte, background_color='#3CB371', font=('Arial', 10, 'bold'))],
             [sg.Input(key='csv'), sg.FileBrowse(button_text='Pesquisa', button_color=(background_fonte,background_fundo), key='file',target='csv')],
@@ -50,8 +55,7 @@ dados = db.bancodedados(numero_da_conta='0')
 print(select_dos_numeros_cadastrados)
 
 
-layout2 = [[sg.Image('recursos/imagens/convertido.png')],
-        [sg.Text('Quantas contas desejar Abrir?', text_color=background_fonte,background_color='#3CB371', font=('Arial', 10, 'bold'))],
+layout2 = [[sg.Text('Quantas contas desejar Abrir?', text_color=background_fonte,background_color='#3CB371', font=('Arial', 10, 'bold'))],
         [sg.Slider(range=(1,10),default_value=1, background_color=background_fonte, text_color='#3CB371' ,orientation='h', key='qrcode')],
         [sg.Text("Informe os números que deseja enviar as mensagens", text_color=background_fonte, background_color='#3CB371', font=('Arial',10, 'bold'))],
         [sg.Text("1º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
@@ -64,7 +68,7 @@ layout2 = [[sg.Image('recursos/imagens/convertido.png')],
         [sg.Input(select_dos_numeros_cadastrados[3]['celular'],key="n4",size=(13, 1))],
         [sg.Text("5º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)),sg.Text("          ", background_color='#3CB371'), sg.Button('Excluir QRCode Indivídual',button_color=(background_fonte,background_fundo), key='botao_excluir_individual')],
         [sg.Input(select_dos_numeros_cadastrados[4]['celular'],key="n5",size=(13, 1)),sg.Text("                ", background_color='#3CB371'),  sg.Input(key="input_excluir_individual",size=(10,1))],
-        [sg.Text("6º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)), sg.Text("                         ex: n1 - n2",text_color=background_fonte,background_color='#3CB371')],
+        [sg.Text("6º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)), sg.Text("                       Ex: 991938533",text_color=background_fonte,background_color='#3CB371')],
         [sg.Input(select_dos_numeros_cadastrados[5]['celular'],key="n6",size=(13, 1))],
         [sg.Text("7º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
         [sg.Input(select_dos_numeros_cadastrados[6]['celular'],key="n7",size=(13, 1))],
@@ -82,31 +86,26 @@ layout2 = [[sg.Image('recursos/imagens/convertido.png')],
 
 
 
-layout3 = [
-    [sg.Text('Enviar SPAM?                                      Preencher SAUDAÇÃO e RESPOSTA.', background_color='#34af23')],
-    [sg.Text('Perguntar direto na SAUDAÇÃO?           Prenncher SAUDAÇÃO e RESPOSTA CONDICIONAL 1.', background_color='#34af23')],
-    [sg.Text('Perguntar direto na RESPOSTA?           Preenchar SAUDAÇÃO, RESPOSTA e RESPOSTA CONDICIONAL 1. ', background_color='#34af23')],
 
 
 
 
-]
 
 
 
 
 
 layout_principal = [
-
-    [sg.Frame("Configurações de envio de mensagens",layout2, background_color='#3CB371',border_width='3px', title_color='#000000'),sg.Frame('Acões',layout, background_color='#3CB371', border_width='3px', title_color='#000000')],
-    [sg.Text("                                                        "),sg.Frame("Tutorial",layout3, element_justification="center", background_color='#3CB371', border_width='3px', title_color='#000000')],
-
+    [sg.Column(layout12,expand_x='False',expand_y='False')],
+    # [sg.Frame('',layout12)],
+    # [sg.Frame("Configurações de envio de mensagens",layout2, background_color='#3CB371',border_width='3px', title_color='#000000'),sg.Frame('Acões',layout, background_color='#3CB371', border_width='3px', title_color='#000000', size=(748,664 ))],
+    [sg.Column(layout2, background_color='#3CB371',size=(352,642 )), sg.Column(layout, background_color='#3CB371', size=(745,642 ))],
 
 
 ]
 
 
-window = sg.Window("Whatsapp", layout_principal, alpha_channel=0.9).Finalize()
+window = sg.Window("Sistema de envio Inteligênte de Whatsapp", layout_principal, icon='recursos/imagens/icone.ico', alpha_channel=0.9).Finalize()
 
 
 
@@ -165,6 +164,10 @@ while True:
 
     if event == "Versão":
         sg.Popup("Whatsbot - Protótipo")
+
+    if event == "Tutorial":
+        # os.startfile('C:/Desenvolvimento python/whatsapp-cliente/recursos/tutorial/tutorialWhatsPrototipo.pdf')
+        os.startfile(dir_path + '\\recursos\\tutorial\\tutorialWhatsPrototipo.pdf')
 
     if event == "Sobre":
         sg.Popup("Somos a empresa Ok - Tecnologia, especializada em Softwares e Sites em geral. Contato: (Telefone da OK Tecnologia)")

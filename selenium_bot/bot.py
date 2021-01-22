@@ -55,12 +55,12 @@ class wppbot:
             self.options.add_argument("--window-position=10,10")
             self.options.add_argument('--lang=pt-BR')
 
-        return webdriver.Chrome(executable_path=r'./driver/chromedriver', chrome_options=self.options)
+        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
 
     def configurar_caminho_do_profile(self):
         db_profiles = bancodedados(numero_da_conta=self.numero_da_conta)
         resultado = db_profiles.encontrado()
-        self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'/profiles/{self.numero_da_conta}/wpp')
+        self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.numero_da_conta}\wpp')
 
         if self.numero_da_conta == resultado:
             print(resultado,"resultado")
