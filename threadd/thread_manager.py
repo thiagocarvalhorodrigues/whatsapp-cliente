@@ -7,8 +7,10 @@ import random
 
 ##### JANELA QUE ENVIA AS MSGS #####
 
-def send_msg_thread(lista_contatos, text_string, response, dinamico_foto, dinamico_legenda, window):
-    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda)
+def send_msg_thread(lista_contatos, text_string, response, dinamico_foto, dinamico_legenda, dinamico_n1, window):
+    numero_da_conta = (dinamico_n1)
+    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda, numero_da_conta=numero_da_conta)
+
     count = 1
     for coluna in lista_contatos:
         try:
@@ -39,9 +41,9 @@ def send_msg_thread(lista_contatos, text_string, response, dinamico_foto, dinami
 
 
 #####JANELA DA CONFIGURAÇÃO DO QRCODE #####
-def configure_qrcode_thread(dinamico_qrcode,dinamico_n1):
-    numero_da_conta = (dinamico_n1)
-    bot = wppbot(minimizer=False, file_qrcode=dinamico_qrcode, numero_da_conta=numero_da_conta)
+def configure_qrcode_thread(dinamico_qrcode,numeros_de_telefones):
+
+    bot = wppbot(minimizer=False, file_qrcode=dinamico_qrcode, numero_da_conta=numeros_de_telefones)
     bot.configure_qrcode()
 
 

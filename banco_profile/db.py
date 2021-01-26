@@ -8,9 +8,6 @@ class bancodedados:
           self.numero_da_conta = numero_da_conta
 
 
-
-
-
      def insert(self):
 
           self.banco.insert({'celular':self.pesquisa})

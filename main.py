@@ -5,10 +5,7 @@ from threading import Thread
 from banco_profile import db
 import shutil
 from banco_profile.deletando import deletar
-
 import os.path
-
-
 # import pygame
 # pygame.init()
 # pygame.mixer.music.load("musica.ogg")
@@ -20,6 +17,7 @@ background_fundo = '#FF4500'
 background_fonte = '#FFFAFA'
 
 
+
 menu_tela_inicial = [
     ['Ajuda',[ 'Versão','Tutorial']],
     ['Contato',['Sobre']]
@@ -28,7 +26,7 @@ menu_tela_inicial = [
 layout12 = [[sg.Image('recursos/imagens/convertido1100px.png')],
 
 ]
-# [[sg.Image('recursos/imagens/Logo700x100.png')],
+
 layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Button('Configurar QRCode',button_color=(background_fonte,background_fundo), key='configurar'), sg.Button('Remover QRCode', button_color=(background_fonte,background_fundo), key='remover')],
             [sg.Text('Arquivo de Entrada ( números a serem disparados)  CSV:',text_color=background_fonte, background_color='#3CB371', font=('Arial', 10, 'bold'))],
@@ -52,43 +50,66 @@ layout =    [[sg.Menu(menu_tela_inicial)],
 
 dados = db.bancodedados(numero_da_conta='0')
 (select_dos_numeros_cadastrados) = (dados.select_all())
-print(select_dos_numeros_cadastrados)
+
+posicao1 = None
+posicao2 = None
+posicao3 = None
+posicao4 = None
+posicao5 = None
+posicao6 = None
+posicao7 = None
+posicao8 = None
+posicao9 = None
+posicao10 = None
+
+for telefone in range(len(select_dos_numeros_cadastrados)):
+    if telefone == 0:
+        posicao1 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 1:
+        posicao2 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 2:
+        posicao3 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 3:
+        posicao4 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 4:
+        posicao5 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 5:
+        posicao6 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 6:
+        posicao7 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 7:
+        posicao8 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 8:
+        posicao9 = (select_dos_numeros_cadastrados[telefone]['celular'])
+    if telefone == 9:
+        posicao10 = (select_dos_numeros_cadastrados[telefone]['celular'])
+
+
 
 
 layout2 = [[sg.Text('Quantas contas desejar Abrir?', text_color=background_fonte,background_color='#3CB371', font=('Arial', 10, 'bold'))],
-        [sg.Slider(range=(1,10),default_value=1, background_color=background_fonte, text_color='#3CB371' ,orientation='h', key='qrcode')],
+        [sg.Slider(range=(1,len(select_dos_numeros_cadastrados)),default_value=1, background_color=background_fonte, text_color='#3CB371' ,orientation='h', key='qrcode')],
         [sg.Text("Informe os números que deseja enviar as mensagens", text_color=background_fonte, background_color='#3CB371', font=('Arial',10, 'bold'))],
         [sg.Text("1º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
-        [sg.Input(select_dos_numeros_cadastrados[0]['celular'], key="n1",size=(13,1))],
+        [sg.Input(posicao1, key="n1",size=(13,1))],
         [sg.Text("2º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
-        [sg.Input(select_dos_numeros_cadastrados[1]['celular'], key="n2",size=(13, 1))],
+        [sg.Input(posicao2, key="n2",size=(13, 1))],
         [sg.Text("3º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
-        [sg.Input(select_dos_numeros_cadastrados[2]['celular'],key="n3",size=(13, 1))],
+        [sg.Input(posicao3,key="n3",size=(13, 1))],
         [sg.Text("4º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-        [sg.Input(select_dos_numeros_cadastrados[3]['celular'],key="n4",size=(13, 1))],
+        [sg.Input(posicao4,key="n4",size=(13, 1))],
         [sg.Text("5º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)),sg.Text("          ", background_color='#3CB371'), sg.Button('Excluir QRCode Indivídual',button_color=(background_fonte,background_fundo), key='botao_excluir_individual')],
-        [sg.Input(select_dos_numeros_cadastrados[4]['celular'],key="n5",size=(13, 1)),sg.Text("                ", background_color='#3CB371'),  sg.Input(key="input_excluir_individual",size=(10,1))],
+        [sg.Input(posicao5,key="n5",size=(13, 1)),sg.Text("                ", background_color='#3CB371'),  sg.Input(key="input_excluir_individual",size=(10,1))],
         [sg.Text("6º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12)), sg.Text("                       Ex: 991938533",text_color=background_fonte,background_color='#3CB371')],
-        [sg.Input(select_dos_numeros_cadastrados[5]['celular'],key="n6",size=(13, 1))],
+        [sg.Input(posicao6,key="n6",size=(13, 1))],
         [sg.Text("7º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-        [sg.Input(select_dos_numeros_cadastrados[6]['celular'],key="n7",size=(13, 1))],
+        [sg.Input(posicao7,key="n7",size=(13, 1))],
         [sg.Text("8º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-        [sg.Input(select_dos_numeros_cadastrados[7]['celular'],key="n8",size=(13, 1))],
+        [sg.Input(posicao8,key="n8",size=(13, 1))],
         [sg.Text("9º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-        [sg.Input(select_dos_numeros_cadastrados[8]['celular'],key="n9",size=(13, 1))],
+        [sg.Input(posicao9,key="n9",size=(13, 1))],
         [sg.Text("10º Número",text_color=background_fonte, background_color='#3CB371',font=('Arial',12))],
-        [sg.Input(select_dos_numeros_cadastrados[9]['celular'],key="n10",size=(13, 1))]
-
-
-
-
-    ]
-
-
-
-
-
-
+        [sg.Input(posicao10,key="n10",size=(13, 1))]]
 
 
 
@@ -131,8 +152,17 @@ while True:
     arquivo_escuta_positiva = (values['escuta_positiva'])
     arquivo_escuta_negativa = (values['escuta_negativa'])
     arquivo_qrcode = int((values['qrcode']))
-    arquivo_profile_n1 = (values['n1'])
     valor_do_input = (values['input_excluir_individual'])
+    arquivo_profile_n1 = (values['n1'])
+    arquivo_profile_n2 = (values['n2'])
+    arquivo_profile_n3 = (values['n3'])
+    arquivo_profile_n4 = (values['n4'])
+    arquivo_profile_n5 = (values['n5'])
+    arquivo_profile_n6 = (values['n6'])
+    arquivo_profile_n7 = (values['n7'])
+    arquivo_profile_n8 = (values['n8'])
+    arquivo_profile_n9 = (values['n9'])
+    arquivo_profile_n10 = (values['n10'])
 
 
 
@@ -145,10 +175,13 @@ while True:
         window.FindElement('status').Update('RODANDO')
         lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
 
-        Thread(target=send_msg_thread, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, window, ), daemon=True).start()
+        Thread(target=send_msg_thread, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, arquivo_profile_n1, window, ), daemon=True).start()
 
     if event == 'configurar':
-        Thread(target=configure_qrcode_thread, args=[arquivo_qrcode, arquivo_profile_n1], daemon=True).start()
+        numeros_de_telefone = [arquivo_profile_n1, arquivo_profile_n2, arquivo_profile_n3, arquivo_profile_n4, arquivo_profile_n5, arquivo_profile_n6,
+                               arquivo_profile_n7, arquivo_profile_n8, arquivo_profile_n9, arquivo_profile_n10]
+
+        Thread(target=configure_qrcode_thread, args=[arquivo_qrcode, numeros_de_telefone], daemon=True).start()
 
 
     if event == 'remover':
@@ -166,7 +199,7 @@ while True:
         sg.Popup("Whatsbot - Protótipo")
 
     if event == "Tutorial":
-        # os.startfile('C:/Desenvolvimento python/whatsapp-cliente/recursos/tutorial/tutorialWhatsPrototipo.pdf')
+
         os.startfile(dir_path + '\\recursos\\tutorial\\tutorialWhatsPrototipo.pdf')
 
     if event == "Sobre":

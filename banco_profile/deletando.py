@@ -12,4 +12,4 @@ class deletar:
         try:
             return bancodedados.banco.remove(bancodedados.User.celular == self.chave) and shutil.rmtree(f'profiles/{self.chave}')
         except:
-            sg.Popup("Não possui nenhum arquivo Profile ou arquivo no banco de dados a ser excluído")
+            sg.Popup("Não possui nenhum arquivo Profile e / OU arquivo no banco de dados a ser excluído")

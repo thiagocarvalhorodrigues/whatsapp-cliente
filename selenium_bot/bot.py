@@ -37,19 +37,22 @@ class wppbot:
 
 
 
-    def configurar_driver(self, minimizer=False):
+    def configurar_driver(self, minimizer=False,profile_id=0):
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--silent ')
         self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.options.add_argument('--log-level=3')
         self.options.add_argument('--lang=pt-BR')
-        self.configurar_caminho_do_profile()
-        self.verificando_profile()
+        self.configurar_caminho_do_profile(profile_id)
+        self.verificando_profile(profile_id)
+
+
 
 
         if minimizer == True:
             self.options.add_argument("--start-minimized")
             self.options.add_argument("--window-position=-10000,0")
+
         else:
             self.options.add_argument("--start-maximized")
             self.options.add_argument("--window-position=10,10")
@@ -57,10 +60,13 @@ class wppbot:
 
         return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
 
-    def configurar_caminho_do_profile(self):
-        db_profiles = bancodedados(numero_da_conta=self.numero_da_conta)
+    def configurar_caminho_do_profile(self,profile_id=0):
+        db_profiles = bancodedados(numero_da_conta=self.numero_da_conta[profile_id])
+        print(db_profiles)
         resultado = db_profiles.encontrado()
-        self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.numero_da_conta}\wpp')
+        if self.numero_da_conta[profile_id] != '':
+            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.numero_da_conta[profile_id]}\wpp')
+            print(self.caminho)
 
         if self.numero_da_conta == resultado:
             print(resultado,"resultado")
@@ -114,11 +120,22 @@ class wppbot:
     ###### ABRE  O NAVEGADOR E LÊ O QRCODE #####
     def configure_qrcode(self):
 
-        for nav in range(self.file_qrcode_range):
+        lista = self.numero_da_conta
+        outraLista = [int(item) for item in lista if item.isdigit()]
+        print(outraLista)  # [1, 2, 3, 4, 7]
+        print(len(outraLista))
+
+
+
+
+        for nav in range(len(outraLista)):
+
+
 
             if nav > 0:
 
-                self.driver = self.configurar_driver()
+
+                self.driver = self.configurar_driver(profile_id=nav)
 
 
 
@@ -152,7 +169,7 @@ class wppbot:
                                 pass
                         break
             time.sleep(2)
-            print(" ai como eu sou lindo")
+
 
             self.driver.close()
             self.driver.quit()
@@ -386,8 +403,8 @@ class wppbot:
         enviar.click()
         time.sleep(2)
 
-    def verificando_profile(self):
-        profile = bancodedados(numero_da_conta=self.numero_da_conta)
+    def verificando_profile(self, profile_id=0):
+        profile = bancodedados(numero_da_conta=self.numero_da_conta[profile_id])
         profile.search_insert()
 
 
