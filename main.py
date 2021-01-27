@@ -164,8 +164,9 @@ while True:
     arquivo_profile_n9 = (values['n9'])
     arquivo_profile_n10 = (values['n10'])
 
-
-
+    numeros_de_telefone = [arquivo_profile_n1, arquivo_profile_n2, arquivo_profile_n3, arquivo_profile_n4,
+                           arquivo_profile_n5, arquivo_profile_n6,
+                           arquivo_profile_n7, arquivo_profile_n8, arquivo_profile_n9, arquivo_profile_n10]
 
     if event == 'iniciar':
 
@@ -175,11 +176,10 @@ while True:
         window.FindElement('status').Update('RODANDO')
         lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
 
-        Thread(target=send_msg_thread, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, arquivo_profile_n1, window, ), daemon=True).start()
+        Thread(target=send_msg_thread, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, numeros_de_telefone, window, ), daemon=True).start()
 
     if event == 'configurar':
-        numeros_de_telefone = [arquivo_profile_n1, arquivo_profile_n2, arquivo_profile_n3, arquivo_profile_n4, arquivo_profile_n5, arquivo_profile_n6,
-                               arquivo_profile_n7, arquivo_profile_n8, arquivo_profile_n9, arquivo_profile_n10]
+
 
         Thread(target=configure_qrcode_thread, args=[arquivo_qrcode, numeros_de_telefone], daemon=True).start()
 

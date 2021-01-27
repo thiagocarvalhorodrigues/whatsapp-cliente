@@ -36,6 +36,15 @@ class wppbot:
         self.file_qrcode_range = self.file_qrcode
 
 
+- listar os contato para enviar mensagem (CSV)
+- Enviar as mensagens
+- Aguardar 120 segundos em cada cliente enviado.
+- Se ele não respondeu, continua pegando os clientes que estão na lista [1,2,3,4]
+- Se alguem responder neste tempo, pela greenball e verifica a resposta - greenball[1,2,3]
+- Verificou a resposta, response para o cliente. A cada resposta greenball[1,2,3] - 1 = greenball[2,3]
+- Caso lista de greenball esteja zerada, continua enviando as mensagens para quem no recebeu.
+
+
 
     def configurar_driver(self, minimizer=False,profile_id=0):
         self.options = webdriver.ChromeOptions()
@@ -46,9 +55,6 @@ class wppbot:
         self.configurar_caminho_do_profile(profile_id)
         self.verificando_profile(profile_id)
 
-
-
-
         if minimizer == True:
             self.options.add_argument("--start-minimized")
             self.options.add_argument("--window-position=-10000,0")
@@ -58,14 +64,14 @@ class wppbot:
             self.options.add_argument("--window-position=10,10")
             self.options.add_argument('--lang=pt-BR')
 
-        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
+        return webdriver.Chrome(executable_path=r'./driver/chromedriver', chrome_options=self.options)
 
     def configurar_caminho_do_profile(self,profile_id=0):
         db_profiles = bancodedados(numero_da_conta=self.numero_da_conta[profile_id])
         print(db_profiles)
         resultado = db_profiles.encontrado()
         if self.numero_da_conta[profile_id] != '':
-            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.numero_da_conta[profile_id]}\wpp')
+            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'/profiles/{self.numero_da_conta[profile_id]}/wpp')
             print(self.caminho)
 
         if self.numero_da_conta == resultado:

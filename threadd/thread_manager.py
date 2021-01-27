@@ -7,9 +7,8 @@ import random
 
 ##### JANELA QUE ENVIA AS MSGS #####
 
-def send_msg_thread(lista_contatos, text_string, response, dinamico_foto, dinamico_legenda, dinamico_n1, window):
-    numero_da_conta = (dinamico_n1)
-    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda, numero_da_conta=numero_da_conta)
+def send_msg_thread(lista_contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window):
+    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda, numero_da_conta=numeros_de_telefone)
 
     count = 1
     for coluna in lista_contatos:
