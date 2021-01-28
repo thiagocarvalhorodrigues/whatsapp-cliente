@@ -36,15 +36,6 @@ class wppbot:
         self.file_qrcode_range = self.file_qrcode
 
 
-- listar os contato para enviar mensagem (CSV)
-- Enviar as mensagens
-- Aguardar 120 segundos em cada cliente enviado.
-- Se ele não respondeu, continua pegando os clientes que estão na lista [1,2,3,4]
-- Se alguem responder neste tempo, pela greenball e verifica a resposta - greenball[1,2,3]
-- Verificou a resposta, response para o cliente. A cada resposta greenball[1,2,3] - 1 = greenball[2,3]
-- Caso lista de greenball esteja zerada, continua enviando as mensagens para quem no recebeu.
-
-
 
     def configurar_driver(self, minimizer=False,profile_id=0):
         self.options = webdriver.ChromeOptions()
@@ -64,14 +55,14 @@ class wppbot:
             self.options.add_argument("--window-position=10,10")
             self.options.add_argument('--lang=pt-BR')
 
-        return webdriver.Chrome(executable_path=r'./driver/chromedriver', chrome_options=self.options)
+        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
 
     def configurar_caminho_do_profile(self,profile_id=0):
         db_profiles = bancodedados(numero_da_conta=self.numero_da_conta[profile_id])
         print(db_profiles)
         resultado = db_profiles.encontrado()
         if self.numero_da_conta[profile_id] != '':
-            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'/profiles/{self.numero_da_conta[profile_id]}/wpp')
+            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.numero_da_conta[profile_id]}\wpp')
             print(self.caminho)
 
         if self.numero_da_conta == resultado:
@@ -193,6 +184,7 @@ class wppbot:
         self.driver.execute_script("window.onbeforeunload = function() {};")
         db = TinyDB('db.json')
         view = Query()
+        self.aguardar()
         while True:
             try:
                 green_balls_notification = self.driver.find_elements_by_css_selector('div[class="_2Q3SY"]')
@@ -413,53 +405,64 @@ class wppbot:
         profile = bancodedados(numero_da_conta=self.numero_da_conta[profile_id])
         profile.search_insert()
 
+    def aguardar(self):
+        scroll_max = 0
+        counter_scroll = 0
+        db = TinyDB('db.json')
+        view = Query()
+
+        while True:
+            try:
+                green_balls_notification = self.driver.find_elements_by_css_selector('div[class="_2Q3SY"]')
+
+                if green_balls_notification == []:
+                    time.sleep(15)
+                    print('não encontrou nenhum número para responder')
+                    if scroll_max == 0:
+                        scroll_max = self.driver.execute_script('return document.querySelector("#pane-side").scrollHeight')
+
+                    else:
+                        counter_scroll += 1
+                        self.driver.execute_script(f'document.querySelector("#pane-side").scrollTop = {counter_scroll}')
 
 
 
+                else:
 
+                    time.sleep(random.randrange(3, 5, 1))  ## TEMPO PARA CLICAR NA RESPOSTA
+                    green_balls_notification[0].click()
 
+                    self.sim_ou_nao()
 
+                    self.person_cell_number = self.driver.find_element_by_xpath('//*[@id="main"]/header/div[2]/div/div/span').get_attribute("title")
 
+                    self.json_db = db.search(view.num == self.person_cell_number)
 
+                    if self.json_db:
+                        number = self.json_db[0]['num'].replace(' ', '').replace('-', '').replace('+', '')
+                        msg = self.json_db[0]['resp']
+                        print(f'{number} - Respondeu')
+                        db.remove(where('num') == self.json_db[0]['num'])
+                        self.driver.get(f'https://web.whatsapp.com/send?phone={number}&text={msg}')
+                        time.sleep(5)
+                        while True:
+                            try:
+                                botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
+                                botao_enviar.click()
+                                time.sleep(2)
+                                if self.file_foto_resposta == "":
+                                    pass
+                                else:
+                                    self.foto_resposta()
+                                    time.sleep(3)
 
+                                self.driver.get('https://web.whatsapp.com/')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                break
+                            except:
+                                pass
+            except:
+                pass
+            if scroll_max < counter_scroll:
+                counter_scroll = 0
 

@@ -190,7 +190,7 @@ while True:
         except:
             pass
     if event == 'responder':
-        Thread(target=verify_msg_thread, args=(arquivo_csv_dinamico, arquivo_excel_dinamico, arquivo_foto_dinamico, arquivo_legenda_dinamico , arquivo_replica_negativa_dinamico, arquivo_resposta_cond1, arquivo_foto_dinamico_resposta, arquivo_escuta_positiva,  arquivo_escuta_negativa), daemon=True).start()
+        Thread(target=verify_msg_thread, args=(arquivo_csv_dinamico, arquivo_excel_dinamico, arquivo_foto_dinamico, arquivo_legenda_dinamico , arquivo_replica_negativa_dinamico, arquivo_resposta_cond1, arquivo_foto_dinamico_resposta, arquivo_escuta_positiva,  arquivo_escuta_negativa, numeros_de_telefone), daemon=True).start()
         window.FindElement('status').Update(text_color='#000000')
         window.FindElement('status').Update(background_color='#00FF00')
         window.FindElement('status').Update('RETORNO')
