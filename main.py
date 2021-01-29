@@ -1,16 +1,12 @@
 import PySimpleGUI as sg
 import csv
-from threadd.thread_manager import send_msg_thread, configure_qrcode_thread, verify_msg_thread
+from threadd.thread_manager import send_msg_thread, configure_qrcode_thread, verify_msg_thread, thred_teste
 from threading import Thread
 from banco_profile import db
 import shutil
 from banco_profile.deletando import deletar
 import os.path
-# import pygame
-# pygame.init()
-# pygame.mixer.music.load("musica.ogg")
-# pygame.mixer.music.play()
-# pygame.event.wait()
+
 dir_path = os.getcwd()
 sg.theme('TanBlue')
 background_fundo = '#FF4500'
@@ -176,7 +172,13 @@ while True:
         window.FindElement('status').Update('RODANDO')
         lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
 
+        Thread(target=thred_teste, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico,numeros_de_telefone, window,), daemon=True).start()
         Thread(target=send_msg_thread, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, numeros_de_telefone, window, ), daemon=True).start()
+
+
+
+
+
 
     if event == 'configurar':
 
@@ -186,7 +188,12 @@ while True:
 
     if event == 'remover':
         try:
-            shutil.rmtree('profiles', ignore_errors=False, onerror=None)
+
+
+            excluindo_chave = deletar(chave=0)
+            excluindo_chave.deletar_todos_os_profile()
+
+
         except:
             pass
     if event == 'responder':
