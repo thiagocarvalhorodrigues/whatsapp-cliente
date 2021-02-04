@@ -1,7 +1,7 @@
 from tinydb import TinyDB, Query, where
 import time
 import random
-
+from logs.whats_log import funcao_warning
 
 class WhatsappUtils:
 
@@ -65,11 +65,13 @@ class WhatsappUtils:
 
                                 break
                             except:
+                                # funcao_warning('FUNÇÃO DENTRO DO ARQUIVO WHATSAPP_UTILS.PY.(verify_msg_response) Botão do chat para enviar a mensagem, provavel erro no botão do XPATH')
                                 pass
 
 
             except:
-
+                # funcao_warning('FUNÇÃO DENTRO DO ARQUIVO WHATSAPP_UTILS.PY (verify_msg_response) Local do envio de mensagens (provavelmente não encontrou XPATH do greenball')
                 pass
+
             if scroll_max < counter_scroll:
                 counter_scroll = 0

@@ -8,6 +8,9 @@ import openpyxl
 import csv
 import pyautogui
 from banco_profile.db import bancodedados
+from logs.whats_log import funcao_warning
+import PySimpleGUI as sg
+
 
 
 ###### INICIANDO O CHROMEDRIVER #######
@@ -18,9 +21,7 @@ class wppbot:
     dir_path = os.getcwd()
 
     def __init__(self,minimizer=True, file_csv=None, file_excel=None, file_foto=None, file_legenda=None, replica_negativa=None, resposta_cond1=None, file_foto_resposta=None,
-                 file_escuta_positiva=None, file_escuta_negativa=None, file_qrcode=None, numero_da_conta=None):
-
-
+                 file_escuta_positiva=None, file_escuta_negativa=None, file_qrcode=None, numero_da_conta=None, sendmesenger=None):
         self.file_csv = file_csv
         self.file_excel = file_excel
         self.file_foto = file_foto
@@ -30,11 +31,11 @@ class wppbot:
         self.file_foto_resposta = file_foto_resposta
         self.file_escuta_positiva = file_escuta_positiva
         self.file_escuta_negativa = file_escuta_negativa
+        self.sendmesenger = sendmesenger
         self.numero_da_conta = numero_da_conta
         self.driver = self.configurar_driver(minimizer)
         self.file_qrcode = file_qrcode
         self.file_qrcode_range = self.file_qrcode
-
 
 
     def configurar_driver(self, minimizer=False,profile_id=0):
@@ -58,20 +59,22 @@ class wppbot:
         return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
 
     def configurar_caminho_do_profile(self,profile_id=0):
-        db_profiles = bancodedados(numero_da_conta=self.numero_da_conta[profile_id])
-        print(db_profiles)
+        db_profiles = bancodedados(numero_da_conta=self.getprofile(profile_id))
+
         resultado = db_profiles.encontrado()
-        if self.numero_da_conta[profile_id] != '':
-            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.numero_da_conta[profile_id]}\wpp')
+        if self.getprofile(profile_id) != '':
+            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.getprofile(profile_id)}\wpp')
             print(self.caminho)
 
-        if self.numero_da_conta == resultado:
+        if self.getprofile(profile_id) == resultado:
             print(resultado,"resultado")
 
         else:
-            print("Irá criar o Profile")
-            return self.caminho
 
+            print("Irá criar o Profile")
+            if self.caminho == " ":
+                print('vazio')
+                return self.caminho
 
 
     def send_msg(self,site,template_response):
@@ -80,7 +83,6 @@ class wppbot:
 
         self.driver.execute_script("window.onbeforeunload = function() {};")
         time.sleep(5)
-
 
 
         while True:
@@ -93,12 +95,11 @@ class wppbot:
                 db.insert({'num': cell_number, 'resp': urllib.parse.quote_plus(template_response)})
                 time.sleep(5)
 
-
-
-
                 break
+
             except:
                 pass
+                # funcao_warning('FUNÇÃO SEND_MSG, Botão de enviar, local a onde pega o número do telefone do destinatário do chatbox')
             try:
                 buttton_invalida_wpp = self.driver.find_element_by_xpath('//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[2]/div')
                 if buttton_invalida_wpp.text == "OK":
@@ -109,6 +110,7 @@ class wppbot:
                     pass
             except:
                 pass
+              # funcao_warning('FUNÇÃO SEND_MSG, NÚMERO VÁLIDO NO WHATS ')
 
     def close_drive(self):
         self.driver.quit()
@@ -119,8 +121,7 @@ class wppbot:
 
         lista = self.numero_da_conta
         outraLista = [int(item) for item in lista if item.isdigit()]
-        print(outraLista)  # [1, 2, 3, 4, 7]
-        print(len(outraLista))
+
 
 
 
@@ -148,15 +149,26 @@ class wppbot:
                         self.driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')
                         qrcode_search = False
                     except:
+                        pass
+                        # funcao_warning('Dentro da função configure_qrcode, XPATH do qrcode')
                         try:
                             self.driver.find_element_by_xpath('//*[@id="side"]/header/div[1]/div/img')
                             qrcode_search = False
                         except:
                             pass
+                            # funcao_warning('Dentro da função configure_qrcode, não encontrou a FOTO DE PERFIL')
                 else:
                     try:
                         self.driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/canvas')
                     except:
+                        pass
+                        # funcao_warning('Dentro da função configure_qrcode, XPATH do qrcode, dentro do ELSE')
+
+
+
+
+
+
                         while True:
                             try:
                                 self.driver.find_element_by_xpath('//*[@id="side"]/header/div[1]/div/img')
@@ -164,6 +176,7 @@ class wppbot:
                                 break
                             except:
                                 pass
+                                # funcao_warning('Dentro da função configure_qrcode no while True,  não encontrou a FOTO DE PERFIL')
                         break
             time.sleep(2)
 
@@ -184,7 +197,7 @@ class wppbot:
         self.driver.execute_script("window.onbeforeunload = function() {};")
         db = TinyDB('db.json')
         view = Query()
-        self.aguardar()
+
         while True:
             try:
                 green_balls_notification = self.driver.find_elements_by_css_selector('div[class="_2Q3SY"]')
@@ -203,7 +216,6 @@ class wppbot:
 
                     time.sleep(random.randrange(3,5,1)) ## TEMPO PARA CLICAR NA RESPOSTA
                     green_balls_notification[0].click()
-
                     self.sim_ou_nao()
 
                     person_cell_number = self.driver.find_element_by_xpath('//*[@id="main"]/header/div[2]/div/div/span').get_attribute("title")
@@ -232,12 +244,12 @@ class wppbot:
 
                                 break
                             except:
-                                pass
+                              funcao_warning('Botão do chat para enviar a mensagem, provavel erro no botão do XPATH')
 
 
             except:
+                funcao_warning('Local do envio de mensagens ( provavelmente não encontrou XPATH')
 
-                pass
             if scroll_max < counter_scroll:
                 counter_scroll = 0
 
@@ -402,67 +414,12 @@ class wppbot:
         time.sleep(2)
 
     def verificando_profile(self, profile_id=0):
-        profile = bancodedados(numero_da_conta=self.numero_da_conta[profile_id])
+        profile = bancodedados(numero_da_conta=self.getprofile( profile_id))
         profile.search_insert()
 
-    def aguardar(self):
-        scroll_max = 0
-        counter_scroll = 0
-        db = TinyDB('db.json')
-        view = Query()
+    def getprofile(self, profile_id=0):
+        if self.sendmesenger is True:
+            return self.numero_da_conta
 
-        while True:
-            try:
-                green_balls_notification = self.driver.find_elements_by_css_selector('div[class="_2Q3SY"]')
-
-                if green_balls_notification == []:
-                    time.sleep(15)
-                    print('não encontrou nenhum número para responder')
-                    if scroll_max == 0:
-                        scroll_max = self.driver.execute_script('return document.querySelector("#pane-side").scrollHeight')
-
-                    else:
-                        counter_scroll += 1
-                        self.driver.execute_script(f'document.querySelector("#pane-side").scrollTop = {counter_scroll}')
-
-
-
-                else:
-
-                    time.sleep(random.randrange(3, 5, 1))  ## TEMPO PARA CLICAR NA RESPOSTA
-                    green_balls_notification[0].click()
-
-                    self.sim_ou_nao()
-
-                    self.person_cell_number = self.driver.find_element_by_xpath('//*[@id="main"]/header/div[2]/div/div/span').get_attribute("title")
-
-                    self.json_db = db.search(view.num == self.person_cell_number)
-
-                    if self.json_db:
-                        number = self.json_db[0]['num'].replace(' ', '').replace('-', '').replace('+', '')
-                        msg = self.json_db[0]['resp']
-                        print(f'{number} - Respondeu')
-                        db.remove(where('num') == self.json_db[0]['num'])
-                        self.driver.get(f'https://web.whatsapp.com/send?phone={number}&text={msg}')
-                        time.sleep(5)
-                        while True:
-                            try:
-                                botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
-                                botao_enviar.click()
-                                time.sleep(2)
-                                if self.file_foto_resposta == "":
-                                    pass
-                                else:
-                                    self.foto_resposta()
-                                    time.sleep(3)
-
-                                self.driver.get('https://web.whatsapp.com/')
-
-                                break
-                            except:
-                                pass
-            except:
-                pass
-            if scroll_max < counter_scroll:
-                counter_scroll = 0
-
+        else:
+            return self.numero_da_conta[profile_id]

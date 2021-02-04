@@ -5,54 +5,27 @@ import time
 import random
 from utils.lista_utils import ListaUtils
 from utils.whatsapp_utils import WhatsappUtils
-
+from logs.whats_log import funcao_warning
 
 
 ################## -- THREADS -- ####################
+def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window):
+    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone, sendmesenger=True)
+    print('NÚMERO DO PROFILE-->',numeros_de_telefone)
+    lista_de_contatos = ListaUtils.particionar_lista(contatos,2)
 
+    for clientes in lista_de_contatos:
+        print('CLIENTES-->', clientes)
 
-def thred_teste(lista_contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window):
-    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone[1])
-
-
-    lista_particionada = ListaUtils.particionar_lista(lista_contatos, 2)
-
-
-    for list in lista_particionada:
-
-        for contato in list:
-            print(contato[0])
+        for contato in clientes:
 
             enviar_mensagem(bot, contato, response, text_string)
             time.sleep(30)
         # Verificar o greenball
         wpp = WhatsappUtils(bot.driver)
+        time.sleep(10)
         wpp.verify_msg_response()
 
-    bot.close_drive()
-    window.FindElement('status').Update(background_color='#FF0000')
-    window.FindElement('status').Update('Finalizado')
-    window.FindElement('iniciar').Update(disabled=False)
-
-
-
-def  send_msg_thread(lista_contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window):
-    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone[1])
-
-
-    lista_particionada = ListaUtils.particionar_lista(lista_contatos, 2)
-
-
-    for list in lista_particionada:
-
-        for contato in list:
-            print(contato[0])
-
-            enviar_mensagem(bot, contato, response, text_string)
-            time.sleep(30)
-        # Verificar o greenball
-        wpp = WhatsappUtils(bot.driver)
-        wpp.verify_msg_response()
 
     bot.close_drive()
     window.FindElement('status').Update(background_color='#FF0000')
@@ -63,6 +36,7 @@ def  send_msg_thread(lista_contatos, text_string, response, dinamico_foto, dinam
 def enviar_mensagem(bot, numero_para_enviar_mensagem, response, text_string):
 
         try:
+            print('numero_para_enviar_mensagem -->', numero_para_enviar_mensagem)
             template_texto = fstr(text_string, numero_para_enviar_mensagem)
             template_response = fstr(response, numero_para_enviar_mensagem)
             time.sleep(random.randrange(5, 10, 1))
@@ -79,13 +53,14 @@ def enviar_mensagem(bot, numero_para_enviar_mensagem, response, text_string):
 
         except:
             pass
+            # funcao_warning('DENTRO DA FUNÇÃO enviar_mensagem, algum problema ao enviar mensagem e/ou arquivo de foto')
 
 
 
 #####JANELA DA CONFIGURAÇÃO DO QRCODE #####
-def configure_qrcode_thread(dinamico_qrcode,numeros_de_telefones):
+def configure_qrcode_thread(numeros_de_telefones):
 
-    bot = wppbot(minimizer=False, file_qrcode=dinamico_qrcode, numero_da_conta=numeros_de_telefones)
+    bot = wppbot(minimizer=False, numero_da_conta=numeros_de_telefones)
     bot.configure_qrcode()
 
 

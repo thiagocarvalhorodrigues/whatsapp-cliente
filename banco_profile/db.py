@@ -1,4 +1,5 @@
 from tinydb import TinyDB, Query
+from logs.whats_log import funcao_info
 
 class bancodedados:
      banco = TinyDB('banco_profile\profile.json')
@@ -7,7 +8,6 @@ class bancodedados:
 
      def __init__(self,numero_da_conta):
           self.numero_da_conta = numero_da_conta
-
 
 
      def insert(self):
@@ -23,8 +23,10 @@ class bancodedados:
                if self.pesquisa == (resultado[0]['celular']):
                     print("Encontrou o valor")
           except:
+
                print("Não encontrado")
                self.insert()
+               funcao_info('DENTRO DA FUNÇÃO search_insert, NÃO ENCONTROU O NÚMERO DA CONTA DENTRO DO BANCO DE DADOS E ADICIONOU.')
 
 
      def encontrado(self):
@@ -36,10 +38,9 @@ class bancodedados:
                     return pesquisa_certa
 
 
-                    # print(self.pesquisa,"pesquisa ")
-
           except:
                pass
+               # funcao_info('DENTRO DA FUNÇAO encontrado, O VALOR NÃO FOI ENCONTRADO DENTRO DO BANCO DE DADOS')
 
 
      def select_all(self):

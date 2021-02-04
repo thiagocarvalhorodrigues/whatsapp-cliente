@@ -1,17 +1,18 @@
 import PySimpleGUI as sg
 import csv
-from threadd.thread_manager import send_msg_thread, configure_qrcode_thread, verify_msg_thread, thred_teste
+from threadd.thread_manager import send_msg_thread, configure_qrcode_thread, verify_msg_thread
 from threading import Thread
 from banco_profile import db
 import shutil
 from banco_profile.deletando import deletar
 import os.path
 
+from utils.lista_utils import ListaUtils
+
 dir_path = os.getcwd()
 sg.theme('TanBlue')
 background_fundo = '#FF4500'
 background_fonte = '#FFFAFA'
-
 
 
 menu_tela_inicial = [
@@ -83,9 +84,7 @@ for telefone in range(len(select_dos_numeros_cadastrados)):
 
 
 
-layout2 = [[sg.Text('Quantas contas desejar Abrir?', text_color=background_fonte,background_color='#3CB371', font=('Arial', 10, 'bold'))],
-        [sg.Slider(range=(1,len(select_dos_numeros_cadastrados)),default_value=1, background_color=background_fonte, text_color='#3CB371' ,orientation='h', key='qrcode')],
-        [sg.Text("Informe os números que deseja enviar as mensagens", text_color=background_fonte, background_color='#3CB371', font=('Arial',10, 'bold'))],
+layout2 = [ [sg.Text("Números no qual deseja enviar as mensagens", text_color=background_fonte, background_color='#3CB371', font=('Arial',10, 'bold'))],
         [sg.Text("1º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
         [sg.Input(posicao1, key="n1",size=(13,1))],
         [sg.Text("2º Número",text_color=background_fonte,  background_color='#3CB371', font=('Arial',12))],
@@ -116,15 +115,12 @@ layout_principal = [
     [sg.Column(layout12,expand_x='False',expand_y='False')],
     # [sg.Frame('',layout12)],
     # [sg.Frame("Configurações de envio de mensagens",layout2, background_color='#3CB371',border_width='3px', title_color='#000000'),sg.Frame('Acões',layout, background_color='#3CB371', border_width='3px', title_color='#000000', size=(748,664 ))],
-    [sg.Column(layout2, background_color='#3CB371',size=(352,642 )), sg.Column(layout, background_color='#3CB371', size=(745,642 ))],
+    [sg.Column(layout2, background_color='#3CB371',size=(315,642 )), sg.Column(layout, background_color='#3CB371', size=(782,642 ))],
 
 
 ]
 
-
 window = sg.Window("Sistema de envio Inteligênte de Whatsapp", layout_principal, icon='recursos/imagens/icone.ico', alpha_channel=0.9).Finalize()
-
-
 
 
 while True:
@@ -147,7 +143,6 @@ while True:
     arquivo_foto_dinamico_resposta = (values['foto_resposta'])
     arquivo_escuta_positiva = (values['escuta_positiva'])
     arquivo_escuta_negativa = (values['escuta_negativa'])
-    arquivo_qrcode = int((values['qrcode']))
     valor_do_input = (values['input_excluir_individual'])
     arquivo_profile_n1 = (values['n1'])
     arquivo_profile_n2 = (values['n2'])
@@ -170,32 +165,35 @@ while True:
         window.FindElement('status').Update(text_color='#000000')
         window.FindElement('status').Update(background_color='#00FF00')
         window.FindElement('status').Update('RODANDO')
+
         lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
-
-        Thread(target=thred_teste, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico,numeros_de_telefone, window,), daemon=True).start()
-        Thread(target=send_msg_thread, args=(lista_contatos, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, numeros_de_telefone, window, ), daemon=True).start()
+        numeros_de_telefone_para_enviar = ListaUtils.limpar_espacos_em_brancos(listao=numeros_de_telefone)
 
 
+        lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos, len(numeros_de_telefone_para_enviar))
+        x = list(lista_de_contato_para_enviar)
+        print('len', len(numeros_de_telefone_para_enviar))
 
-
+        for numero_de_contato in numeros_de_telefone_para_enviar:
+            for clientes in x:
+               Thread(target=send_msg_thread, args=(clientes, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, numero_de_contato, window, ), daemon=True).start()
 
 
     if event == 'configurar':
+        if arquivo_profile_n1 == "":
+                sg.Popup('Preencher o número do Profile')
 
-
-        Thread(target=configure_qrcode_thread, args=[arquivo_qrcode, numeros_de_telefone], daemon=True).start()
+        if arquivo_profile_n1 != "":
+            Thread(target=configure_qrcode_thread, args=[numeros_de_telefone], daemon=True).start()
 
 
     if event == 'remover':
-        try:
-
 
             excluindo_chave = deletar(chave=0)
             excluindo_chave.deletar_todos_os_profile()
 
 
-        except:
-            pass
+
     if event == 'responder':
         Thread(target=verify_msg_thread, args=(arquivo_csv_dinamico, arquivo_excel_dinamico, arquivo_foto_dinamico, arquivo_legenda_dinamico , arquivo_replica_negativa_dinamico, arquivo_resposta_cond1, arquivo_foto_dinamico_resposta, arquivo_escuta_positiva,  arquivo_escuta_negativa, numeros_de_telefone), daemon=True).start()
         window.FindElement('status').Update(text_color='#000000')
@@ -216,5 +214,3 @@ while True:
         excluindo_chave = deletar(chave=valor_do_input)
         excluindo_chave.delete()
         sg.Popup("Excluido")
-
-
