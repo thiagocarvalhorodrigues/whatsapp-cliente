@@ -6,7 +6,7 @@ from banco_profile import db
 import shutil
 from banco_profile.deletando import deletar
 import os.path
-
+import os
 from utils.lista_utils import ListaUtils
 
 dir_path = os.getcwd()
@@ -171,12 +171,20 @@ while True:
 
 
         lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos, len(numeros_de_telefone_para_enviar))
-        x = list(lista_de_contato_para_enviar)
+        clientes_para_enviar = list(lista_de_contato_para_enviar)
         print('len', len(numeros_de_telefone_para_enviar))
 
         for numero_de_contato in numeros_de_telefone_para_enviar:
-            for clientes in x:
-               Thread(target=send_msg_thread, args=(clientes, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, numero_de_contato, window, ), daemon=True).start()
+            print(f'Numero do telefone do profile -> {numero_de_contato}')
+            print(f'Clientes para enviar -> {clientes_para_enviar}')
+            for clientes in clientes_para_enviar:
+                print(f'Cliente atual -> {clientes}')
+                try:
+                    Thread(target=send_msg_thread, args=(clientes, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, numero_de_contato, window, ), daemon=True).start()
+                    clientes_para_enviar.remove(clientes)
+                except Exception as ex:
+                    print(ex)
+                    pass
 
 
     if event == 'configurar':

@@ -12,7 +12,7 @@ from logs.whats_log import funcao_warning
 def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window):
     bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone, sendmesenger=True)
     print('NÚMERO DO PROFILE-->',numeros_de_telefone)
-    lista_de_contatos = ListaUtils.particionar_lista(contatos,2)
+    lista_de_contatos = ListaUtils.particionar_lista(contatos,10)
 
     for clientes in lista_de_contatos:
         print('CLIENTES-->', clientes)
@@ -23,7 +23,7 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
             time.sleep(30)
         # Verificar o greenball
         wpp = WhatsappUtils(bot.driver)
-        time.sleep(10)
+        time.sleep(120)
         wpp.verify_msg_response()
 
 
