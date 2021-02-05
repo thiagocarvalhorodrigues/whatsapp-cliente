@@ -9,6 +9,7 @@ import os.path
 import os
 from utils.lista_utils import ListaUtils
 
+
 dir_path = os.getcwd()
 sg.theme('TanBlue')
 background_fundo = '#FF4500'
@@ -17,12 +18,13 @@ background_fonte = '#FFFAFA'
 
 menu_tela_inicial = [
     ['Ajuda',[ 'Versão','Tutorial']],
-    ['Contato',['Sobre']]
+    ['Contato',['Sobre']],
+    ['Configurações',['Quantidade de contatos por envio']],
 
     ]
-layout12 = [[sg.Image('recursos/imagens/convertido1100px.png')],
 
-]
+layout12 = [[sg.Image('recursos/imagens/convertido1100px.png')],
+            ]
 
 layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Button('Configurar QRCode',button_color=(background_fonte,background_fundo), key='configurar'), sg.Button('Remover QRCode', button_color=(background_fonte,background_fundo), key='remover')],
@@ -42,7 +44,6 @@ layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Text('Réplica NEGATIVA:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],[sg.Text('A Réplica serve para responder uma posição NEGATIVA do cliente.',text_color=background_fonte, background_color='#3CB371',)],
             [sg.Multiline(size=(30, 2), key='replica_negativa')],
             [sg.Button('Iniciar', button_color=(background_fonte,background_fundo), key='iniciar'), sg.Button('Responder', button_color=(background_fonte,background_fundo), key='responder'),sg.Text('                  ', background_color='#3CB371', key='status')]]
-
 
 
 dados = db.bancodedados(numero_da_conta='0')
@@ -123,6 +124,7 @@ layout_principal = [
 window = sg.Window("Sistema de envio Inteligênte de Whatsapp", layout_principal, icon='recursos/imagens/icone.ico', alpha_channel=0.9).Finalize()
 
 
+
 while True:
 
     event, values = window.read()
@@ -155,6 +157,8 @@ while True:
     arquivo_profile_n9 = (values['n9'])
     arquivo_profile_n10 = (values['n10'])
 
+
+
     numeros_de_telefone = [arquivo_profile_n1, arquivo_profile_n2, arquivo_profile_n3, arquivo_profile_n4,
                            arquivo_profile_n5, arquivo_profile_n6,
                            arquivo_profile_n7, arquivo_profile_n8, arquivo_profile_n9, arquivo_profile_n10]
@@ -170,7 +174,7 @@ while True:
         numeros_de_telefone_para_enviar = ListaUtils.limpar_espacos_em_brancos(listao=numeros_de_telefone)
 
 
-        lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos, len(numeros_de_telefone_para_enviar))
+        lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos, 2)
         clientes_para_enviar = list(lista_de_contato_para_enviar)
         print('len', len(numeros_de_telefone_para_enviar))
 
@@ -222,3 +226,7 @@ while True:
         excluindo_chave = deletar(chave=valor_do_input)
         excluindo_chave.delete()
         sg.Popup("Excluido")
+
+    if event == 'Quantidade de contatos por envio':
+        ListaUtils.menu_enviar_contatos(self=0)
+

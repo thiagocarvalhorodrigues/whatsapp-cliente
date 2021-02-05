@@ -3,8 +3,8 @@ from logs.whats_log import funcao_info
 
 class bancodedados:
 
-     banco = TinyDB('banco_profile/profile.json')
-     caminho_profile = 'banco_profile/profile.json'
+     banco = TinyDB('banco_profile\profile.json')
+     caminho_profile = 'banco_profile\profile.json'
      User = Query()
 
      def __init__(self,numero_da_conta):
@@ -23,9 +23,10 @@ class bancodedados:
                else:
                     print("Não encontrado")
                     self.insert()
-          except Exception as ex:
-               print(ex)
-               funcao_info('DENTRO DA FUNÇÃO search_insert, NÃO ENCONTROU O NÚMERO DA CONTA DENTRO DO BANCO DE DADOS E ADICIONOU.')
+          except:
+               self.insert()
+               # print(ex)
+               # funcao_info('DENTRO DA FUNÇÃO search_insert, NÃO ENCONTROU O NÚMERO DA CONTA DENTRO DO BANCO DE DADOS E ADICIONOU.')
 
 
      def encontrado(self):
