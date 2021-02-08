@@ -45,7 +45,7 @@ class wppbot:
         self.options.add_argument('--log-level=3')
         self.options.add_argument('--lang=pt-BR')
         self.configurar_caminho_do_profile(profile_id)
-        #self.verificando_profile(profile_id)
+        self.verificando_profile(profile_id)
 
         if minimizer == True:
             self.options.add_argument("--start-minimized")

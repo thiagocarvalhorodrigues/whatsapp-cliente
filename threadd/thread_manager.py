@@ -5,14 +5,24 @@ import time
 import random
 from utils.lista_utils import ListaUtils
 from utils.whatsapp_utils import WhatsappUtils
+from banco_enviar_quantidade_de_contatos.db_envio_contatos import banco_envio_contatos
 from logs.whats_log import funcao_warning
+
 
 
 ################## -- THREADS -- ####################
 def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window):
     bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone, sendmesenger=True)
     print('NÚMERO DO PROFILE-->',numeros_de_telefone)
-    lista_de_contatos = ListaUtils.particionar_lista(contatos,10)
+
+    select_no_banco_qtd_envio_de_contatos  = banco_envio_contatos(quantidade_contato=0)
+    qtd_envio_de_contatos = select_no_banco_qtd_envio_de_contatos.select_all()
+    qtd_envio_de_contatos_a_enviar = int(qtd_envio_de_contatos[0]['contato'])
+    print('quantidade_de_contatos_a_enviar', qtd_envio_de_contatos_a_enviar)
+
+
+
+    lista_de_contatos = ListaUtils.particionar_lista(contatos,qtd_envio_de_contatos_a_enviar)
 
     for clientes in lista_de_contatos:
         print('CLIENTES-->', clientes)

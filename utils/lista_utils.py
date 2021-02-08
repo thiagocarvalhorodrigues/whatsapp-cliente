@@ -31,7 +31,7 @@ class ListaUtils:
         layoutmenu = [
             [sg.Text('Informe a quantidade de contatos por envio', background_color='#3CB371', text_color='#FFFAFA')],
             [sg.Input((int(select_quantidade_dos_quantidades[0]['contato'])), key='envio_quantidade_de_contatos')],
-            [sg.OK()]
+            [sg.OK('Salvar')]
 
             ]
         janela = sg.Window("Configuração de envio de mensagens", layoutmenu, button_color=('#FFFAFA', '#FF4500'),
@@ -46,7 +46,7 @@ class ListaUtils:
 
             arquivo_menu_enviar_contatos = (valores['envio_quantidade_de_contatos'])
 
-            if event == 'OK':
+            if event == 'Salvar':
                 banco_envio_quantidade_contatos = db_envio_contatos.banco_envio_contatos(quantidade_contato=arquivo_menu_enviar_contatos)
-                banco_envio_quantidade_contatos.insert()
+                banco_envio_quantidade_contatos.Update()
                 janela.close()

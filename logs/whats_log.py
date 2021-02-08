@@ -42,9 +42,3 @@ def funcao_critical(critical):
     arquivo_critical = logging.critical(critical)
 
     return arquivo_critical
-
-
-
-
-
-

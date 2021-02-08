@@ -12,7 +12,7 @@ class bancodedados:
 
 
      def insert(self):
-          self.banco.insert({'celular':self.numero_da_conta})
+          self.banco.insert({'celular':int(self.numero_da_conta)})
 
 
      def search_insert(self):
@@ -24,6 +24,7 @@ class bancodedados:
                     print("Não encontrado")
                     self.insert()
           except:
+               print("Except")
                self.insert()
                # print(ex)
                # funcao_info('DENTRO DA FUNÇÃO search_insert, NÃO ENCONTROU O NÚMERO DA CONTA DENTRO DO BANCO DE DADOS E ADICIONOU.')
