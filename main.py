@@ -173,8 +173,10 @@ while True:
         lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
         numeros_de_telefone_para_enviar = ListaUtils.limpar_espacos_em_brancos(listao=numeros_de_telefone)
 
+            ##### Profile ####
+        lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos, len(numeros_de_telefone_para_enviar))
+        print('LEN --> tamanho numeros_de_telefone_para_enviar', len(numeros_de_telefone_para_enviar))
 
-        lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos, 2)
         clientes_para_enviar = list(lista_de_contato_para_enviar)
         print('len', len(numeros_de_telefone_para_enviar))
 

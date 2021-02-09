@@ -33,8 +33,8 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
             time.sleep(30)
         # Verificar o greenball
         wpp = WhatsappUtils(bot.driver)
-        time.sleep(120)
         wpp.verify_msg_response()
+        time.sleep(120)
 
 
     bot.close_drive()

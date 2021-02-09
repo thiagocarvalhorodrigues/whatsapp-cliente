@@ -9,13 +9,13 @@ class banco_envio_contatos:
           self.quantidade_contato =quantidade_contato
 
 
-
      def insert(self):
           print(self.quantidade_contato)
-          self.banco.insert({'contato':self.quantidade_contato})
+          self.banco.insert({'contato':int(self.quantidade_contato)})
+
 
      def Update(self):
-          self.banco.update({'contato':self.quantidade_contato})
+          self.banco.update({'contato':int(self.quantidade_contato)})
 
 
      def select_all(self):
