@@ -112,6 +112,7 @@ class wppbot:
                 pass
               # funcao_warning('FUNÇÃO SEND_MSG, NÚMERO VÁLIDO NO WHATS ')
 
+
     def close_drive(self):
         self.driver.quit()
 
@@ -233,22 +234,24 @@ class wppbot:
                                 botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
                                 botao_enviar.click()
                                 time.sleep(2)
-                                if self.file_foto_resposta == "":
-                                    pass
-                                else:
-                                    self.foto_resposta()
-                                    time.sleep(3)
+
+                                ##debugar##
+                                # if self.file_foto_resposta == "":
+                                #     pass
+                                # else:
+                                #     self.foto_resposta()
+                                time.sleep(3)
 
                                 self.driver.get('https://web.whatsapp.com/')
 
 
                                 break
                             except:
-                              funcao_warning('Botão do chat para enviar a mensagem, provavel erro no botão do XPATH')
+                              pass
 
 
             except:
-                funcao_warning('Local do envio de mensagens ( provavelmente não encontrou XPATH')
+                pass
 
             if scroll_max < counter_scroll:
                 counter_scroll = 0

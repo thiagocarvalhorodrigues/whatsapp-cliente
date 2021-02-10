@@ -20,9 +20,3 @@ class banco_envio_contatos:
 
      def select_all(self):
            return self.banco.all()
-
-     #
-     # def search_insert(self):
-     #      resultado = self.banco.search(self.User.celular == self.numero_da_conta)
-     #      try:
-     #           if len(resultado) > 0:

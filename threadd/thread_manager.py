@@ -10,8 +10,8 @@ from logs.whats_log import funcao_warning
 
 
 
-################## -- THREADS -- ####################
-def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window):
+################## -- THREADS -- #################### ALTERAR NOMES, POIS ESTÁ IGUAL A OUTRA THREAD
+def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window, ):
     bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone, sendmesenger=True)
     print('NÚMERO DO PROFILE-->',numeros_de_telefone)
 
@@ -30,11 +30,12 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
         for contato in clientes:
 
             enviar_mensagem(bot, contato, response, text_string)
-            time.sleep(30)
+            time.sleep(10)
         # Verificar o greenball
-        wpp = WhatsappUtils(bot.driver)
-        wpp.verify_msg_response()
-        time.sleep(120)
+        bot.verify_msg_response()
+        # wpp = WhatsappUtils(bot.driver)
+        # wpp.verify_msg_response()
+        time.sleep(20)
 
 
     bot.close_drive()
@@ -75,7 +76,7 @@ def configure_qrcode_thread(numeros_de_telefones):
 
 
 
-###JANELA DE VERIFICAÇÃO DE MENSAGEM - RESPONDE###
+##JANELA DE VERIFICAÇÃO DE MENSAGEM - RESPONDE###
 def verify_msg_thread(dinamico_csv, dinamico_excel,dinamico_foto, dinamico_legenda, dinamico_replica_negativa, dinamico_resposta_cond1, dinamico_foto_resposta, dinamico_escuta_positiva,  dinamico_escuta_negativa, numeros_de_telefones):
     bot = wppbot(minimizer=False, file_csv=dinamico_csv, file_excel=dinamico_excel, file_foto=dinamico_foto, file_legenda=dinamico_legenda, replica_negativa=dinamico_replica_negativa, resposta_cond1=dinamico_resposta_cond1, file_foto_resposta=dinamico_foto_resposta, file_escuta_positiva=dinamico_escuta_positiva, file_escuta_negativa=dinamico_escuta_negativa, numero_da_conta=numeros_de_telefones)
     bot.verify_msg_response()

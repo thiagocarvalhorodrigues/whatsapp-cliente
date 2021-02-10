@@ -1,0 +1,30 @@
+1ª mensagem 
+
+Bom Dia falo com Sr.Srª{coluna[1]}?
+
+Confirme digitando *SIM* ou *NAO*
+
+
+2ª caso localização positiva.... /
+
+Caso resposta negativa a localização = Ok favor desconsiderar o contato.
+
+###################################################
+1) {coluna[1]}? 
+
+Negativa ( Ok desculpa pelo engano....)
+
+2) {coluna[1]} que bom te encontrar, tentamos falar com vc mas sem sucesso. Temos uma novidade que pode ser interessante. Caso queira saber do que se trata responda sim ou não.
+
+nagativa (Ok entendi, não vou mais enviar mensagens pra vc.... Desculpe....)
+
+3) {coluna[1]} Nós do banco PAN temos a satisfação de liberar uma conta Digital para nossos clientes com bom relacionamento. Com vantagens como Cartão de Crédito, ou empréstimos com taxas mais atrativas. E o melhor, sem custos ou cobranças de tarifas.
+Abaixo segue o Link para baixar o APP do banco, e assim seguir o processo totalmente seguro.
+
+https://agx.link/Fc0k4ZW58
+##################################################
+
+
+
+
+
