@@ -11,8 +11,16 @@ from logs.whats_log import funcao_warning
 
 
 ################## -- THREADS -- #################### ALTERAR NOMES, POIS ESTÁ IGUAL A OUTRA THREAD
-def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone, window, ):
-    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone, sendmesenger=True)
+def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone,
+                     dinamico_csv, dinamico_excel, dinamico_replica_negativa, dinamico_resposta_cond1,
+                     dinamico_foto_resposta, dinamico_escuta_positiva, dinamico_escuta_negativa, window,):
+
+    bot = wppbot(file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone, file_csv=dinamico_csv,
+                 file_excel=dinamico_excel,  replica_negativa = dinamico_replica_negativa, resposta_cond1 = dinamico_resposta_cond1,
+                 file_foto_resposta=dinamico_foto_resposta, file_escuta_positiva=dinamico_escuta_positiva, file_escuta_negativa=dinamico_escuta_negativa, sendmesenger=True)
+
+
+
     print('NÚMERO DO PROFILE-->',numeros_de_telefone)
 
     select_no_banco_qtd_envio_de_contatos  = banco_envio_contatos(quantidade_contato=0)
@@ -70,7 +78,6 @@ def enviar_mensagem(bot, numero_para_enviar_mensagem, response, text_string):
 
 #####JANELA DA CONFIGURAÇÃO DO QRCODE #####
 def configure_qrcode_thread(numeros_de_telefones):
-
     bot = wppbot(minimizer=False, numero_da_conta=numeros_de_telefones)
     bot.configure_qrcode()
 

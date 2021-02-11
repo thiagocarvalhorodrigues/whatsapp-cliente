@@ -186,7 +186,16 @@ while True:
             for clientes in clientes_para_enviar:
                 print(f'Cliente atual -> {clientes}')
                 try:
-                    Thread(target=send_msg_thread, args=(clientes, values['textbox'], values['response'], arquivo_foto_dinamico, arquivo_legenda_dinamico, numero_de_contato, window, ), daemon=True).start()
+                    Thread(target=send_msg_thread,
+                           args=(clientes, values['textbox'], values['response'],  arquivo_foto_dinamico,
+                            arquivo_legenda_dinamico, numero_de_contato, arquivo_csv_dinamico, arquivo_excel_dinamico,
+                            arquivo_replica_negativa_dinamico, arquivo_resposta_cond1, arquivo_foto_dinamico_resposta,
+                            arquivo_escuta_positiva, arquivo_escuta_negativa, window, ), daemon=True).start()
+
+                    # contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone,
+                    # dinamico_csv, dinamico_excel, dinamico_replica_negativa, dinamico_resposta_cond1,
+                    # dinamico_foto_resposta, dinamico_escuta_positiva, dinamico_escuta_negativa, window
+
                     clientes_para_enviar.remove(clientes)
                 except Exception as ex:
                     print(ex)

@@ -21,7 +21,7 @@ class wppbot:
     dir_path = os.getcwd()
 
     def __init__(self,minimizer=True, file_csv=None, file_excel=None, file_foto=None, file_legenda=None, replica_negativa=None, resposta_cond1=None, file_foto_resposta=None,
-                 file_escuta_positiva=None, file_escuta_negativa=None, file_qrcode=None, numero_da_conta=None, sendmesenger=None):
+                 file_escuta_positiva=None, file_escuta_negativa=None, numero_da_conta=None, sendmesenger=None):
         self.file_csv = file_csv
         self.file_excel = file_excel
         self.file_foto = file_foto
@@ -34,8 +34,8 @@ class wppbot:
         self.sendmesenger = sendmesenger
         self.numero_da_conta = numero_da_conta
         self.driver = self.configurar_driver(minimizer)
-        self.file_qrcode = file_qrcode
-        self.file_qrcode_range = self.file_qrcode
+        # self.file_qrcode = file_qrcode
+        # self.file_qrcode_range = self.file_qrcode
 
 
     def configurar_driver(self, minimizer=False,profile_id=0):
@@ -56,14 +56,14 @@ class wppbot:
             self.options.add_argument("--window-position=10,10")
             self.options.add_argument('--lang=pt-BR')
 
-        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
+        return webdriver.Chrome(executable_path=r'./driver/chromedriver', chrome_options=self.options)
 
     def configurar_caminho_do_profile(self,profile_id=0):
         db_profiles = bancodedados(numero_da_conta=self.getprofile(profile_id))
 
         resultado = db_profiles.encontrado()
         if self.getprofile(profile_id) != '':
-            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.getprofile(profile_id)}\wpp')
+            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'/profiles/{self.getprofile(profile_id)}/wpp')
             print(self.caminho)
 
         if self.getprofile(profile_id) == resultado:
@@ -236,10 +236,10 @@ class wppbot:
                                 time.sleep(2)
 
                                 ##debugar##
-                                # if self.file_foto_resposta == "":
-                                #     pass
-                                # else:
-                                #     self.foto_resposta()
+                                if self.file_foto_resposta == "":
+                                    pass
+                                else:
+                                    self.foto_resposta()
                                 time.sleep(3)
 
                                 self.driver.get('https://web.whatsapp.com/')

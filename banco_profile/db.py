@@ -3,8 +3,8 @@ from logs.whats_log import funcao_info
 
 class bancodedados:
 
-     banco = TinyDB('banco_profile\profile.json')
-     caminho_profile = 'banco_profile\profile.json'
+     banco = TinyDB('banco_profile/profile.json')
+     caminho_profile = 'banco_profile/profile.json'
      User = Query()
 
      def __init__(self,numero_da_conta):
