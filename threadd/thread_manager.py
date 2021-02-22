@@ -15,7 +15,7 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
                      dinamico_csv, dinamico_excel, dinamico_replica_negativa, dinamico_resposta_cond1,
                      dinamico_foto_resposta, dinamico_escuta_positiva, dinamico_escuta_negativa, window,):
 
-    bot = wppbot(file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone, file_csv=dinamico_csv,
+    bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda,numero_da_conta=numeros_de_telefone, file_csv=dinamico_csv,
                  file_excel=dinamico_excel,  replica_negativa = dinamico_replica_negativa, resposta_cond1 = dinamico_resposta_cond1,
                  file_foto_resposta=dinamico_foto_resposta, file_escuta_positiva=dinamico_escuta_positiva, file_escuta_negativa=dinamico_escuta_negativa, sendmesenger=True)
 
@@ -23,27 +23,27 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
 
     print('NÚMERO DO PROFILE-->',numeros_de_telefone)
 
-    select_no_banco_qtd_envio_de_contatos  = banco_envio_contatos(quantidade_contato=0)
-    qtd_envio_de_contatos = select_no_banco_qtd_envio_de_contatos.select_all()
-    qtd_envio_de_contatos_a_enviar = int(qtd_envio_de_contatos[0]['contato'])
-    print('quantidade_de_contatos_a_enviar', qtd_envio_de_contatos_a_enviar)
+    # select_no_banco_qtd_envio_de_contatos  = banco_envio_contatos(quantidade_contato=0)
+    # qtd_envio_de_contatos = select_no_banco_qtd_envio_de_contatos.select_all()
+    # qtd_envio_de_contatos_a_enviar = int(qtd_envio_de_contatos[0]['contato'])
+    # print('quantidade_de_contatos_a_enviar', qtd_envio_de_contatos_a_enviar)
 
 
 
-    lista_de_contatos = ListaUtils.particionar_lista(contatos,qtd_envio_de_contatos_a_enviar)
+    # lista_de_contatos = ListaUtils.particionar_lista(contatos,qtd_envio_de_contatos_a_enviar)
 
-    for clientes in lista_de_contatos:
-        print('CLIENTES-->', clientes)
+    # for clientes in lista_de_contatos:
+    #     print('CLIENTES-->', clientes)
 
-        for contato in clientes:
+    for contato in contatos:
 
-            enviar_mensagem(bot, contato, response, text_string)
-            time.sleep(10)
-        # Verificar o greenball
-        bot.verify_msg_response()
-        # wpp = WhatsappUtils(bot.driver)
-        # wpp.verify_msg_response()
-        time.sleep(20)
+        enviar_mensagem(bot, contato, response, text_string)
+        time.sleep(10)
+    # Verificar o greenball
+    bot.verify_msg_response()
+    # wpp = WhatsappUtils(bot.driver)
+    # wpp.verify_msg_response()
+    time.sleep(20)
 
 
     bot.close_drive()

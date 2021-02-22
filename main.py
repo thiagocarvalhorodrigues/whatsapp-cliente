@@ -8,6 +8,7 @@ from banco_profile.deletando import deletar
 import os.path
 import os
 from utils.lista_utils import ListaUtils
+from banco_salvar_dados_frontend.db_frontend import BancoGuardarFrontend
 
 
 dir_path = os.getcwd()
@@ -26,6 +27,19 @@ menu_tela_inicial = [
 layout12 = [[sg.Image('recursos/imagens/convertido1100px.png')],
             ]
 
+front = BancoGuardarFrontend(saudacao='0',resposta='0', resposta_condicional1='0',
+                                    respostas_escutar_positiva='0',resposta_escutar_negativa='0',
+                                    replica_negativa='0')
+select_front = front.select_all()
+# print(select_front)
+
+saudacao = (select_front[0]['saudacao'])
+resposta = (select_front[0]['resposta'])
+resposta_condicional1 = (select_front[0]['resposta_condicional1'])
+resposta_escutar_positiva = (select_front[0]['resposta_escutar_positiva'])
+resposta_escutar_negativa = (select_front[0]['resposta_escutar_negativa'])
+replica = (select_front[0]['replica'])
+
 layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Button('Configurar QRCode',button_color=(background_fonte,background_fundo), key='configurar'), sg.Button('Remover QRCode', button_color=(background_fonte,background_fundo), key='remover')],
             [sg.Text('Arquivo de Entrada ( números a serem disparados)  CSV:',text_color=background_fonte, background_color='#3CB371', font=('Arial', 10, 'bold'))],
@@ -38,12 +52,13 @@ layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Text('ARQUIVO/FOTO/VIDEO -- Selecione para RESPOSTA:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],
             [sg.Input(key='foto_resposta'), sg.FileBrowse(button_text='Pesquisar',button_color=(background_fonte,background_fundo), key='arquivo_resposta', target='foto_resposta')],
             [sg.Text('LEGENDA DA FOTO Não obrigatório:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold')), sg.Text('Saudação:                                       ', text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold')),sg.Text('Resposta:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],
-            [sg.Multiline(size=(30,2),key='legenda'), sg.Multiline(size=(30, 2), key='textbox'),sg.Multiline(size=(30, 2), key='response')],
+            [sg.Multiline(size=(30,2),key='legenda'), sg.Multiline(saudacao,size=(30, 2), key='textbox'),sg.Multiline(resposta, size=(30, 2), key='response')],
             [sg.Text('Resposta Condicional 1:                      Respostas para ESCUTAR - POSITIVA:  Respostas para ESCUTAR - NEGATIVA:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],
-            [sg.Multiline(size=(30, 2), key='resposta_cond_1'),sg.Multiline(size=(30, 2), key='escuta_positiva'),sg.Multiline(size=(30, 2), key='escuta_negativa')],
+            [sg.Multiline(resposta_condicional1,size=(30, 2), key='resposta_cond_1'),sg.Multiline(resposta_escutar_positiva,size=(30, 2), key='escuta_positiva'),sg.Multiline(resposta_escutar_negativa,size=(30, 2), key='escuta_negativa')],
             [sg.Text('Réplica NEGATIVA:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],[sg.Text('A Réplica serve para responder uma posição NEGATIVA do cliente.',text_color=background_fonte, background_color='#3CB371',)],
-            [sg.Multiline(size=(30, 2), key='replica_negativa')],
+            [sg.Multiline(replica,size=(30, 2), key='replica_negativa')],
             [sg.Button('Iniciar', button_color=(background_fonte,background_fundo), key='iniciar'), sg.Button('Responder', button_color=(background_fonte,background_fundo), key='responder'),sg.Text('                  ', background_color='#3CB371', key='status')]]
+
 
 
 dados = db.bancodedados(numero_da_conta='0')
@@ -108,10 +123,6 @@ layout2 = [ [sg.Text("Números no qual deseja enviar as mensagens", text_color=b
         [sg.Input(posicao10,key="n10",size=(13, 1))]]
 
 
-
-
-
-
 layout_principal = [
     [sg.Column(layout12,expand_x='False',expand_y='False')],
     # [sg.Frame('',layout12)],
@@ -156,6 +167,8 @@ while True:
     arquivo_profile_n8 = (values['n8'])
     arquivo_profile_n9 = (values['n9'])
     arquivo_profile_n10 = (values['n10'])
+    arquivo_saudacao = (values['textbox'])
+    arquivo_resposta = (values['response'])
 
 
 
@@ -164,6 +177,12 @@ while True:
                            arquivo_profile_n7, arquivo_profile_n8, arquivo_profile_n9, arquivo_profile_n10]
 
     if event == 'iniciar':
+        front = BancoGuardarFrontend(saudacao=arquivo_saudacao,resposta=arquivo_resposta, resposta_condicional1= arquivo_resposta_cond1,
+                                    respostas_escutar_positiva=arquivo_escuta_positiva,resposta_escutar_negativa=arquivo_escuta_negativa,
+                                    replica_negativa=arquivo_replica_negativa_dinamico)
+        front.Update()
+
+
 
         window.FindElement('iniciar').Update(disabled=True)
         window.FindElement('status').Update(text_color='#000000')
@@ -173,7 +192,7 @@ while True:
         lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
         numeros_de_telefone_para_enviar = ListaUtils.limpar_espacos_em_brancos(listao=numeros_de_telefone)
 
-            ##### Profile ####
+            ##### Profile #####
         lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos, len(numeros_de_telefone_para_enviar))
         print('LEN --> tamanho numeros_de_telefone_para_enviar', len(numeros_de_telefone_para_enviar))
 

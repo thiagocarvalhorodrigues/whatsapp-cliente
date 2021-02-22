@@ -56,14 +56,15 @@ class wppbot:
             self.options.add_argument("--window-position=10,10")
             self.options.add_argument('--lang=pt-BR')
 
-        return webdriver.Chrome(executable_path=r'./driver/chromedriver', chrome_options=self.options)
+        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
+
 
     def configurar_caminho_do_profile(self,profile_id=0):
         db_profiles = bancodedados(numero_da_conta=self.getprofile(profile_id))
 
         resultado = db_profiles.encontrado()
         if self.getprofile(profile_id) != '':
-            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'/profiles/{self.getprofile(profile_id)}/wpp')
+            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.getprofile(profile_id)}\wpp')
             print(self.caminho)
 
         if self.getprofile(profile_id) == resultado:
@@ -79,6 +80,7 @@ class wppbot:
 
     def send_msg(self,site,template_response):
         db = TinyDB('db.json')
+
         self.driver.get(site)
 
         self.driver.execute_script("window.onbeforeunload = function() {};")
@@ -193,7 +195,15 @@ class wppbot:
     def verify_msg_response(self):
         scroll_max = 0
         counter_scroll = 0
-        self.driver.get('https://web.whatsapp.com/')
+        try:
+
+            self.driver.get('https://web.whatsapp.com/')
+        except Exception as ex:
+            print(ex)
+
+            self.driver.get('https://web.whatsapp.com/')
+            pass
+
         time.sleep(5)
         self.driver.execute_script("window.onbeforeunload = function() {};")
         db = TinyDB('db.json')
@@ -426,3 +436,5 @@ class wppbot:
 
         else:
             return self.numero_da_conta[profile_id]
+
+

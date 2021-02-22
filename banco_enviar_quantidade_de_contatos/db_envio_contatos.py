@@ -2,9 +2,8 @@ from tinydb import TinyDB, Query
 
 
 class banco_envio_contatos:
-     banco = TinyDB('banco_enviar_quantidade_de_contatos//banco_envio_contatos.json')
-     User = Query()
-
+     banco = TinyDB('banco_enviar_quantidade_de_contatos\\banco_envio_contatos.json')
+     User = Query
      def __init__(self,quantidade_contato):
           self.quantidade_contato =quantidade_contato
 
