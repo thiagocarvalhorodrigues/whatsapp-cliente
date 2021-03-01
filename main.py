@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 import csv
-from threadd.thread_manager import send_msg_thread, configure_qrcode_thread, verify_msg_thread
+from threadd.thread_manager import send_msg_thread, configure_qrcode_thread
 from threading import Thread
 from banco_profile import db
 import shutil
@@ -192,33 +192,33 @@ while True:
         lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
         numeros_de_telefone_para_enviar = ListaUtils.limpar_espacos_em_brancos(listao=numeros_de_telefone)
 
+        print(list(numeros_de_telefone_para_enviar))
             ##### Profile #####
-        lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos, len(numeros_de_telefone_para_enviar))
+        quantidade_profiles = len(numeros_de_telefone_para_enviar)
+        lista_de_contato_para_enviar = ListaUtils.particionar_lista(lista_contatos,  quantidade_profiles)
         print('LEN --> tamanho numeros_de_telefone_para_enviar', len(numeros_de_telefone_para_enviar))
+        print('numero de telefone para enviar -->',(numeros_de_telefone_para_enviar))
 
         clientes_para_enviar = list(lista_de_contato_para_enviar)
-        print('len', len(numeros_de_telefone_para_enviar))
 
-        for numero_de_contato in numeros_de_telefone_para_enviar:
-            print(f'Numero do telefone do profile -> {numero_de_contato}')
-            print(f'Clientes para enviar -> {clientes_para_enviar}')
-            for clientes in clientes_para_enviar:
-                print(f'Cliente atual -> {clientes}')
+
+
+        for indice_do_profile in range(quantidade_profiles):
+            if len(clientes_para_enviar[indice_do_profile]) > 0:
                 try:
                     Thread(target=send_msg_thread,
-                           args=(clientes, values['textbox'], values['response'],  arquivo_foto_dinamico,
-                            arquivo_legenda_dinamico, numero_de_contato, arquivo_csv_dinamico, arquivo_excel_dinamico,
-                            arquivo_replica_negativa_dinamico, arquivo_resposta_cond1, arquivo_foto_dinamico_resposta,
-                            arquivo_escuta_positiva, arquivo_escuta_negativa, window, ), daemon=True).start()
-
-                    # contatos, text_string, response, dinamico_foto, dinamico_legenda, numeros_de_telefone,
-                    # dinamico_csv, dinamico_excel, dinamico_replica_negativa, dinamico_resposta_cond1,
-                    # dinamico_foto_resposta, dinamico_escuta_positiva, dinamico_escuta_negativa, window
-
-                    clientes_para_enviar.remove(clientes)
-                except Exception as ex:
-                    print(ex)
+                           args=(clientes_para_enviar[indice_do_profile], values['textbox'], values['response'], arquivo_foto_dinamico,
+                                 arquivo_legenda_dinamico, numeros_de_telefone_para_enviar[indice_do_profile], arquivo_csv_dinamico,
+                                 arquivo_excel_dinamico,
+                                 arquivo_replica_negativa_dinamico, arquivo_resposta_cond1,
+                                 arquivo_foto_dinamico_resposta,
+                                 arquivo_escuta_positiva, arquivo_escuta_negativa, window,), daemon=True).start()
+                except:
                     pass
+
+
+
+
 
 
     if event == 'configurar':

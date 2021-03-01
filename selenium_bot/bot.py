@@ -41,7 +41,6 @@ class wppbot:
     def configurar_driver(self, minimizer=False,profile_id=0):
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--silent ')
-        self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.options.add_argument('--log-level=3')
         self.options.add_argument('--lang=pt-BR')
         self.configurar_caminho_do_profile(profile_id)
@@ -56,7 +55,13 @@ class wppbot:
             self.options.add_argument("--window-position=10,10")
             self.options.add_argument('--lang=pt-BR')
 
-        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe', chrome_options=self.options)
+
+
+
+
+        return webdriver.Chrome(executable_path=r'.\driver\chromedriver.exe',chrome_options=self.options)
+
+
 
 
     def configurar_caminho_do_profile(self,profile_id=0):
@@ -64,8 +69,9 @@ class wppbot:
 
         resultado = db_profiles.encontrado()
         if self.getprofile(profile_id) != '':
-            self.caminho= self.options.add_argument(r"user-data-dir=" + self.dir_path + f'\profiles\{self.getprofile(profile_id)}\wpp')
-            print(self.caminho)
+               self.caminho = self.options.add_argument(r"--user-data-dir=" + self.dir_path + f'\profiles\{self.getprofile(profile_id)}\wpp')
+
+
 
         if self.getprofile(profile_id) == resultado:
             print(resultado,"resultado")
@@ -81,37 +87,30 @@ class wppbot:
     def send_msg(self,site,template_response):
         db = TinyDB('db.json')
 
+
         self.driver.get(site)
 
         self.driver.execute_script("window.onbeforeunload = function() {};")
+        time.sleep(30)
+
+
+        botao_enviar = self.driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/footer/div[1]/div[3]')
+        botao_enviar.click()
+        time.sleep(5)
+        cell_number = self.driver.find_element_by_xpath('//*[@id="main"]/header/div[2]/div/div/span').get_attribute("title")
+        db.insert({'num': cell_number, 'resp': urllib.parse.quote_plus(template_response)})
         time.sleep(5)
 
+        # funcao_warning('FUNÇÃO SEND_MSG, Botão de enviar, local a onde pega o número do telefone do destinatário do chatbox')
 
-        while True:
-            try:
+        buttton_invalida_wpp = self.driver.find_element_by_xpath('//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[2]/div')
+        if buttton_invalida_wpp.text == "OK":
+            buttton_invalida_wpp.click()
 
-                botao_enviar = self.driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/footer/div[1]/div[3]')
-                botao_enviar.click()
-                time.sleep(5)
-                cell_number = self.driver.find_element_by_xpath('//*[@id="main"]/header/div[2]/div/div/span').get_attribute("title")
-                db.insert({'num': cell_number, 'resp': urllib.parse.quote_plus(template_response)})
-                time.sleep(5)
 
-                break
+        else:
+            pass
 
-            except:
-                pass
-                # funcao_warning('FUNÇÃO SEND_MSG, Botão de enviar, local a onde pega o número do telefone do destinatário do chatbox')
-            try:
-                buttton_invalida_wpp = self.driver.find_element_by_xpath('//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[2]/div')
-                if buttton_invalida_wpp.text == "OK":
-                    buttton_invalida_wpp.click()
-
-                    break
-                else:
-                    pass
-            except:
-                pass
               # funcao_warning('FUNÇÃO SEND_MSG, NÚMERO VÁLIDO NO WHATS ')
 
 
@@ -195,14 +194,10 @@ class wppbot:
     def verify_msg_response(self):
         scroll_max = 0
         counter_scroll = 0
-        try:
 
-            self.driver.get('https://web.whatsapp.com/')
-        except Exception as ex:
-            print(ex)
 
-            self.driver.get('https://web.whatsapp.com/')
-            pass
+        self.driver.get('https://web.whatsapp.com/')
+
 
         time.sleep(5)
         self.driver.execute_script("window.onbeforeunload = function() {};")
@@ -211,7 +206,8 @@ class wppbot:
 
         while True:
             try:
-                green_balls_notification = self.driver.find_elements_by_css_selector('div[class="_2Q3SY"]')
+                green_balls_notification = self.driver.find_elements_by_css_selector('span[class="_38M1B"]')
+
 
                 if green_balls_notification == []:
                     if scroll_max == 0:
@@ -269,19 +265,19 @@ class wppbot:
 
 
     def escuta1(self):
-        post = self.driver.find_elements_by_class_name('_1dB-m')
+        post = self.driver.find_elements_by_class_name('_1br5a')
         ultimo = len(post) - 1
         texto1 = post[ultimo].find_element_by_css_selector('span.selectable-text').text
         return texto1
 
     def escuta2(self):
-        post = self.driver.find_elements_by_class_name('_1dB-m')
+        post = self.driver.find_elements_by_class_name('_1br5a')
         penultimo = len(post) - 2
         texto2 = post[penultimo].find_element_by_css_selector('span.selectable-text').text
         return texto2
 
     def escuta3(self):
-        post = self.driver.find_elements_by_class_name('_1dB-m')
+        post = self.driver.find_elements_by_class_name('_1br5a')
         antipenultimo = len(post) - 3
         texto3 = post[antipenultimo].find_element_by_css_selector('span.selectable-text').text
         return texto3
@@ -328,44 +324,55 @@ class wppbot:
 
 
     def sim_ou_nao(self):
-        self.respostas_positivas = (self.file_escuta_positiva)
-        self.respostas_negativas = (self.file_escuta_negativa)
+        # self.respostas_positivas = (self.file_escuta_positiva)
+        # self.respostas_negativas = (self.file_escuta_negativa)
+        # print('Respostas negativas',self.respostas_negativas)
+        # print('Respostas positivas', self.respostas_positivas)
 
-        if self.escuta1() in self.respostas_positivas or self.escuta2() in self.respostas_positivas or self.escuta3() in self.respostas_positivas:
+        # if self.escuta1() in self.respostas_positivas or self.escuta2() in self.respostas_positivas or self.escuta3() in self.respostas_positivas:
+        #     print("pegou do metodo SIM ---> POSITIVAS")
 
-
-            print("pegou do metodo SIM ---> POSITIVAS")
-
-            time.sleep(2)
-            if self.resposta_cond1 == "":
-                pass
-            else:
-                caixa_mensagem = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
-                caixa_mensagem.send_keys(f'{self.resposta_cond1}')
-
-
-            if self.file_csv == "":
-                pass
-            else:
-                self.entrando_lendo_csv()
-            if self.file_excel == "":
-                pass
-            else:
-                self.saindo_salvando_xlsx()
-                time.sleep(2)
-
-            if self.file_foto_resposta == "":
-                pass
-            else:
-                self.foto_resposta()
-
-
-        if self.escuta1() in self.respostas_negativas or self.escuta2() in self.respostas_negativas or self.escuta3() in self.respostas_negativas:
-            print("pegou do metodo SIM ---> NEGATIVAS")
+        time.sleep(2)
+        print("resposta_cond1-->",self.resposta_cond1)
+        if self.resposta_cond1 == "":
+            print("resposta_cond1 dentro-->", self.resposta_cond1)
+            pass
+        else:
             caixa_mensagem = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
-            caixa_mensagem.send_keys(f'{self.replica_negativa}')
-            enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button/span')
-            enviar.click()
+            caixa_mensagem.send_keys(f'{self.resposta_cond1}')
+
+        print('File CSV-->',self.file_csv)
+
+        # # if self.file_csv == "":
+        #     print('File CSV dentro -->', self.file_csv)
+        #     pass
+        # else:
+        #     # self.entrando_lendo_csv()
+
+        print('File EXCEL-->', self.file_excel)
+
+        if self.file_excel == "":
+            print('File EXCEL dentro -->', self.file_excel)
+            pass
+
+        else:
+            self.saindo_salvando_xlsx()
+            time.sleep(2)
+
+        print("file_foto_resposta -->", self.file_foto_resposta)
+        if self.file_foto_resposta == "":
+            print("file_foto_resposta dentro -->", self.file_foto_resposta)
+            pass
+        else:
+            self.foto_resposta()
+
+
+        # if self.escuta1() in self.respostas_negativas or self.escuta2() in self.respostas_negativas or self.escuta3() in self.respostas_negativas:
+        #     print("pegou do metodo SIM ---> NEGATIVAS")
+        #     caixa_mensagem = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
+        #     caixa_mensagem.send_keys(f'{self.replica_negativa}')
+        #     enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button/span')
+        #     enviar.click()
 
 
 
