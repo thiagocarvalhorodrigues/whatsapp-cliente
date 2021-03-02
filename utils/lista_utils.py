@@ -7,8 +7,9 @@ class ListaUtils:
         pass
 
     def particionar_lista(lista, n):
+        n = int(n)
         inicio = 0
-        for i in range(n):
+        for i in range(int(n)):
             final = inicio + len(lista[i::n])
             yield lista[inicio:final]
             inicio = final

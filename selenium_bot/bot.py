@@ -91,12 +91,12 @@ class wppbot:
         self.driver.get(site)
 
         self.driver.execute_script("window.onbeforeunload = function() {};")
-        time.sleep(30)
+        time.sleep(15)
 
 
         botao_enviar = self.driver.find_element_by_xpath('/html/body/div[1]/div/div/div[4]/div/footer/div[1]/div[3]')
         botao_enviar.click()
-        time.sleep(5)
+        time.sleep(2)
         cell_number = self.driver.find_element_by_xpath('//*[@id="main"]/header/div[2]/div/div/span').get_attribute("title")
         db.insert({'num': cell_number, 'resp': urllib.parse.quote_plus(template_response)})
         time.sleep(5)
@@ -196,6 +196,7 @@ class wppbot:
         counter_scroll = 0
 
 
+
         self.driver.get('https://web.whatsapp.com/')
 
 
@@ -235,6 +236,7 @@ class wppbot:
                         db.remove(where('num') == json_db[0]['num'])
                         self.driver.get(f'https://web.whatsapp.com/send?phone={number}&text={msg}')
                         time.sleep(5)
+
                         while True:
                             try:
                                 botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
@@ -251,6 +253,7 @@ class wppbot:
                                 self.driver.get('https://web.whatsapp.com/')
 
 
+
                                 break
                             except:
                               pass
@@ -261,6 +264,7 @@ class wppbot:
 
             if scroll_max < counter_scroll:
                 counter_scroll = 0
+
 
 
 

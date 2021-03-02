@@ -18,7 +18,7 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
                      dinamico_foto_resposta, dinamico_escuta_positiva, dinamico_escuta_negativa, window,):
 
     bot = wppbot(minimizer=False, file_foto=dinamico_foto, file_legenda=dinamico_legenda, numero_da_conta=numeros_de_telefone, file_csv=dinamico_csv,
-                 file_excel=dinamico_excel, replica_negativa=dinamico_replica_negativa, resposta_cond1 = dinamico_resposta_cond1,
+                 file_excel=dinamico_excel, replica_negativa=dinamico_replica_negativa, resposta_cond1=dinamico_resposta_cond1,
                  file_foto_resposta=dinamico_foto_resposta, file_escuta_positiva=dinamico_escuta_positiva, file_escuta_negativa=dinamico_escuta_negativa, sendmesenger=True)
 
 
@@ -32,26 +32,15 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
 
 
 
-    lista_de_contatos = ListaUtils.particionar_lista(contatos, qtd_envio_de_contatos_a_enviar)
+    lista_de_contatos = list(ListaUtils.particionar_lista(contatos, handle_value_to_partition(contatos, qtd_envio_de_contatos_a_enviar)))
 
     for clientes in lista_de_contatos:
-        print("clientesssssssssssss", clientes)
+        # print("clientesssssssssssss", clientes)
         for cliente in clientes:
-            print("daleeeeeeeeeeeeeeees", cliente)
+            # print("daleeeeeeeeeeeeeeees", cliente)
             enviar_mensagem(bot, cliente, response, text_string)
         execute_message(bot)
 
-
-
-    # for contato in contatos:
-    #
-    #     enviar_mensagem(bot, contato, response, text_string)
-    #     time.sleep(10)
-    # # Verificar o greenball
-    # bot.verify_msg_response()
-    # # wpp = WhatsappUtils(bot.driver)
-    # # wpp.verify_msg_response()
-    # time.sleep(10)
 
 
     bot.close_drive()
@@ -91,7 +80,10 @@ def enviar_mensagem(bot, numero_para_enviar_mensagem, response, text_string):
             pass
             # funcao_warning('DENTRO DA FUNÇÃO enviar_mensagem, algum problema ao enviar mensagem e/ou arquivo de foto')
 
-
+def handle_value_to_partition(contatos, qtd_envio_de_contatos_a_enviar):
+    if len(contatos) % qtd_envio_de_contatos_a_enviar == 0:
+        return len(contatos) / qtd_envio_de_contatos_a_enviar
+    return round(len(contatos) / qtd_envio_de_contatos_a_enviar - 0.5)
 
 #####JANELA DA CONFIGURAÇÃO DO QRCODE #####
 def configure_qrcode_thread(numeros_de_telefones):
