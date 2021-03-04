@@ -8,6 +8,8 @@ from utils.lista_utils import ListaUtils
 from utils.whatsapp_utils import WhatsappUtils
 from banco_enviar_quantidade_de_contatos.db_envio_contatos import banco_envio_contatos
 from logs.whats_log import funcao_warning
+from twisted.internet import task, reactor
+
 
 
 
@@ -34,12 +36,7 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
 
     lista_de_contatos = list(ListaUtils.particionar_lista(contatos, handle_value_to_partition(contatos, qtd_envio_de_contatos_a_enviar)))
 
-    for clientes in lista_de_contatos:
-        # print("clientesssssssssssss", clientes)
-        for cliente in clientes:
-            # print("daleeeeeeeeeeeeeeees", cliente)
-            enviar_mensagem(bot, cliente, response, text_string)
-        execute_message(bot)
+    metodo_for(bot, lista_de_contatos, response, text_string)
 
 
 
@@ -49,12 +46,19 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
     window.FindElement('iniciar').Update(disabled=False)
 
 
-def execute_message(bot):
-    starttime = time.time()
-    while True:
+
+
+def metodo_for(bot, lista_de_contatos, response, text_string):
+    for clientes in lista_de_contatos:
+        # print("clientesssssssssssss", clientes)
+        for cliente in clientes:
+            # print("daleeeeeeeeeeeeeeees", cliente)
+            enviar_mensagem(bot, cliente, response, text_string)
         bot.verify_msg_response()
-        time.sleep(10.0 - ((time.time() - starttime) % 10.0))
-        break
+
+
+
+
 
 
 def enviar_mensagem(bot, numero_para_enviar_mensagem, response, text_string):

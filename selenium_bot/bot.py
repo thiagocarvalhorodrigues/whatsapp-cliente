@@ -8,8 +8,10 @@ import openpyxl
 import csv
 import pyautogui
 from banco_profile.db import bancodedados
+from threadd import thread_manager
+from datetime import datetime
 from logs.whats_log import funcao_warning
-import PySimpleGUI as sg
+
 
 
 
@@ -196,7 +198,6 @@ class wppbot:
         counter_scroll = 0
 
 
-
         self.driver.get('https://web.whatsapp.com/')
 
 
@@ -205,7 +206,23 @@ class wppbot:
         db = TinyDB('db.json')
         view = Query()
 
+        now1 = datetime.now()
         while True:
+            current_time = now1.strftime("%H:%M:%S")
+            print("Current Time =", current_time)
+
+            now2 = datetime.now()
+            current_time2 = now2.strftime("%H:%M:%S")
+            print("Current Time =", current_time2)
+
+            seconds = int((now2 - now1).total_seconds())
+            print(seconds)
+            if seconds >= 120:
+                now3 = datetime.now()
+                current_time3 = now3.strftime("%H:%M:%S")
+                print("Stop -> Current Time =", current_time3)
+                break
+
             try:
                 green_balls_notification = self.driver.find_elements_by_css_selector('span[class="_38M1B"]')
 
@@ -258,13 +275,11 @@ class wppbot:
                             except:
                               pass
 
-
             except:
                 pass
 
             if scroll_max < counter_scroll:
                 counter_scroll = 0
-
 
 
 
@@ -377,8 +392,6 @@ class wppbot:
         #     caixa_mensagem.send_keys(f'{self.replica_negativa}')
         #     enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button/span')
         #     enviar.click()
-
-
 
 
     def foto(self):
