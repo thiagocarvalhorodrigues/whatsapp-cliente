@@ -196,11 +196,7 @@ class wppbot:
     def verify_msg_response(self):
         scroll_max = 0
         counter_scroll = 0
-
-
         self.driver.get('https://web.whatsapp.com/')
-
-
         time.sleep(5)
         self.driver.execute_script("window.onbeforeunload = function() {};")
         db = TinyDB('db.json')

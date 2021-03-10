@@ -8,7 +8,7 @@ from utils.lista_utils import ListaUtils
 from utils.whatsapp_utils import WhatsappUtils
 from banco_enviar_quantidade_de_contatos.db_envio_contatos import banco_envio_contatos
 from logs.whats_log import funcao_warning
-from twisted.internet import task, reactor
+
 
 
 
@@ -38,8 +38,6 @@ def  send_msg_thread(contatos, text_string, response, dinamico_foto, dinamico_le
 
     metodo_for(bot, lista_de_contatos, response, text_string)
 
-
-
     bot.close_drive()
     window.FindElement('status').Update(background_color='#FF0000')
     window.FindElement('status').Update('Finalizado')
@@ -55,9 +53,6 @@ def metodo_for(bot, lista_de_contatos, response, text_string):
             # print("daleeeeeeeeeeeeeeees", cliente)
             enviar_mensagem(bot, cliente, response, text_string)
         bot.verify_msg_response()
-
-
-
 
 
 

@@ -1,9 +1,12 @@
+from tinydb import where
+from tinydb.operations import delete
+
 from banco_profile.db import bancodedados
 import shutil
 import PySimpleGUI as sg
 import os
 from pathlib import Path
-from logs.whats_log import funcao_info
+# from logs.whats_log import funcao_info
 
 
 
@@ -15,10 +18,14 @@ class deletar:
 
     def delete(self):
         try:
-            return bancodedados.banco.remove(bancodedados.User.celular == self.chave) and shutil.rmtree(f'profiles\{self.chave}')
+            select = bancodedados.banco.all()
+            print('----> SELECT ANTES',select)
+            print('----> CHAVE ANTES',self.chave)
+            return bancodedados.banco.remove(bancodedados.User.celular == int(self.chave)) and shutil.rmtree(f'profiles\{self.chave}')
+
         except:
             sg.Popup("Não possui nenhum arquivo Profile e / OU arquivo no banco de dados a ser excluído")
-            funcao_info('Dentro da função delete: Não possui nenhum arquivo Profile e / OU arquivo no banco de dados a ser excluído')
+            # funcao_info('Dentro da função delete: Não possui nenhum arquivo Profile e / OU arquivo no banco de dados a ser excluído')
 
 
 
@@ -31,4 +38,4 @@ class deletar:
                 sg.Popup("Excluido")
         except:
             sg.Popup("Não possui nenhum arquivo Profile e / OU arquivo no banco de dados a ser excluído")
-            funcao_info('Dentro da função deletar_todos_os_profile: Não possui nenhum arquivo Profile e / OU arquivo no banco de dados a ser excluído ')
+            # funcao_info('Dentro da função deletar_todos_os_profile: Não possui nenhum arquivo Profile e / OU arquivo no banco de dados a ser excluído ')

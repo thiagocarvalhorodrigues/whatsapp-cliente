@@ -31,7 +31,7 @@ front = BancoGuardarFrontend(saudacao='0',resposta='0', resposta_condicional1='0
                                     respostas_escutar_positiva='0',resposta_escutar_negativa='0',
                                     replica_negativa='0')
 select_front = front.select_all()
-# print(select_front)
+
 
 saudacao = (select_front[0]['saudacao'])
 resposta = (select_front[0]['resposta'])
@@ -43,10 +43,10 @@ replica = (select_front[0]['replica'])
 layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Button('Configurar QRCode',button_color=(background_fonte,background_fundo), key='configurar'), sg.Button('Remover QRCode', button_color=(background_fonte,background_fundo), key='remover')],
             [sg.Text('Arquivo de Entrada ( números a serem disparados)  CSV:',text_color=background_fonte, background_color='#3CB371', font=('Arial', 10, 'bold'))],
-            [sg.Input(key='csv'), sg.FileBrowse(button_text='Pesquisa', button_color=(background_fonte,background_fundo), key='file',target='csv')],
+            [sg.Input(key='csv'), sg.FileBrowse(button_text='Pesquisa', button_color=(background_fonte,background_fundo),file_types=(("CSV", "*.CSV"),), key='file',target='csv')],
             [sg.Text('Arquivo de Saída EXCEL:',text_color=background_fonte, background_color='#3CB371', font=('Arial', 10, 'bold'))],
             [sg.Text('( Armazena os dados dos clientes ) que aceitaram a CAMPANHA: ',text_color=background_fonte, background_color='#3CB371',)],
-            [sg.Input(key='excel'), sg.FileBrowse(button_text='Pesquisar',button_color=(background_fonte,background_fundo), key='saida', target='excel')],
+            [sg.Input(key='excel'), sg.FileBrowse(button_text='Pesquisar',button_color=(background_fonte,background_fundo),file_types=(("XLSX", "*.XLSX"),), key='saida', target='excel')],
             [sg.Text('ARQUIVO/FOTO/VIDEO -- Selecione para SAUDAÇÃO:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],
             [sg.Input(key='foto'), sg.FileBrowse(button_text='Pesquisar',button_color=(background_fonte,background_fundo), key='arquivo', target='foto')],
             [sg.Text('ARQUIVO/FOTO/VIDEO -- Selecione para RESPOSTA:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],
@@ -57,7 +57,7 @@ layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Multiline(resposta_condicional1,size=(30, 2), key='resposta_cond_1'),sg.Multiline(resposta_escutar_positiva,size=(30, 2), key='escuta_positiva'),sg.Multiline(resposta_escutar_negativa,size=(30, 2), key='escuta_negativa')],
             [sg.Text('Réplica NEGATIVA:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],[sg.Text('A Réplica serve para responder uma posição NEGATIVA do cliente.',text_color=background_fonte, background_color='#3CB371',)],
             [sg.Multiline(replica,size=(30, 2), key='replica_negativa')],
-            [sg.Button('Iniciar', button_color=(background_fonte,background_fundo), key='iniciar'), sg.Button('Responder', button_color=(background_fonte,background_fundo), key='responder'),sg.Text('                  ', background_color='#3CB371', key='status')]]
+            [sg.Button('Iniciar', button_color=(background_fonte,background_fundo), key='iniciar'),sg.Text('                  ', background_color='#3CB371', key='status')]]
 
 
 
@@ -177,10 +177,20 @@ while True:
                            arquivo_profile_n7, arquivo_profile_n8, arquivo_profile_n9, arquivo_profile_n10]
 
     if event == 'iniciar':
+
+        if values['file'] == "":
+            sg.Popup('Selecione uma lista de contatos do tipo CSV')
+            window.FindElement('iniciar').Update(disabled=False)
+            window.FindElement('status').Update('')
+            window.FindElement('status').Update(background_color='#3CB371')
+            continue
+
+
         front = BancoGuardarFrontend(saudacao=arquivo_saudacao,resposta=arquivo_resposta, resposta_condicional1= arquivo_resposta_cond1,
                                     respostas_escutar_positiva=arquivo_escuta_positiva,resposta_escutar_negativa=arquivo_escuta_negativa,
                                     replica_negativa=arquivo_replica_negativa_dinamico)
         front.Update()
+
 
 
 
@@ -189,9 +199,11 @@ while True:
         window.FindElement('status').Update(background_color='#00FF00')
         window.FindElement('status').Update('RODANDO')
 
-        lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
-        numeros_de_telefone_para_enviar = ListaUtils.limpar_espacos_em_brancos(listao=numeros_de_telefone)
 
+
+        lista_contatos = list(csv.reader(open(values['file']), delimiter=";"))
+
+        numeros_de_telefone_para_enviar = ListaUtils.limpar_espacos_em_brancos(listao=numeros_de_telefone)
         print(list(numeros_de_telefone_para_enviar))
             ##### Profile #####
         quantidade_profiles = len(numeros_de_telefone_para_enviar)
@@ -236,11 +248,11 @@ while True:
 
 
 
-    if event == 'responder':
-        Thread(target=verify_msg_thread, args=(arquivo_csv_dinamico, arquivo_excel_dinamico, arquivo_foto_dinamico, arquivo_legenda_dinamico , arquivo_replica_negativa_dinamico, arquivo_resposta_cond1, arquivo_foto_dinamico_resposta, arquivo_escuta_positiva,  arquivo_escuta_negativa, numeros_de_telefone), daemon=True).start()
-        window.FindElement('status').Update(text_color='#000000')
-        window.FindElement('status').Update(background_color='#00FF00')
-        window.FindElement('status').Update('RETORNO')
+    # if event == 'responder':
+    #     Thread(target=verify_msg_thread, args=(arquivo_csv_dinamico, arquivo_excel_dinamico, arquivo_foto_dinamico, arquivo_legenda_dinamico , arquivo_replica_negativa_dinamico, arquivo_resposta_cond1, arquivo_foto_dinamico_resposta, arquivo_escuta_positiva,  arquivo_escuta_negativa, numeros_de_telefone), daemon=True).start()
+    #     window.FindElement('status').Update(text_color='#000000')
+    #     window.FindElement('status').Update(background_color='#00FF00')
+    #     window.FindElement('status').Update('RETORNO')
 
     if event == "Versão":
         sg.Popup("Whatsbot - Protótipo")
