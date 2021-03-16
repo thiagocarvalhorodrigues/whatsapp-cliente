@@ -9,6 +9,7 @@ import os.path
 import os
 from utils.lista_utils import ListaUtils
 from banco_salvar_dados_frontend.db_frontend import BancoGuardarFrontend
+from tags import tag
 
 
 dir_path = os.getcwd()
@@ -58,7 +59,6 @@ layout =    [[sg.Menu(menu_tela_inicial)],
             [sg.Text('Réplica NEGATIVA:',text_color=background_fonte, background_color='#3CB371',font=('Arial', 10, 'bold'))],[sg.Text('A Réplica serve para responder uma posição NEGATIVA do cliente.',text_color=background_fonte, background_color='#3CB371',)],
             [sg.Multiline(replica,size=(30, 2), key='replica_negativa')],
             [sg.Button('Iniciar', button_color=(background_fonte,background_fundo), key='iniciar'),sg.Text('                  ', background_color='#3CB371', key='status')]]
-
 
 
 dados = db.bancodedados(numero_da_conta='0')
@@ -219,7 +219,8 @@ while True:
             if len(clientes_para_enviar[indice_do_profile]) > 0:
                 try:
                     Thread(target=send_msg_thread,
-                           args=(clientes_para_enviar[indice_do_profile], values['textbox'], values['response'], arquivo_foto_dinamico,
+                           args=(clientes_para_enviar[indice_do_profile], values['textbox'], values['response'],
+                                 arquivo_foto_dinamico,
                                  arquivo_legenda_dinamico, numeros_de_telefone_para_enviar[indice_do_profile], arquivo_csv_dinamico,
                                  arquivo_excel_dinamico,
                                  arquivo_replica_negativa_dinamico, arquivo_resposta_cond1,
@@ -227,10 +228,6 @@ while True:
                                  arquivo_escuta_positiva, arquivo_escuta_negativa, window,), daemon=True).start()
                 except:
                     pass
-
-
-
-
 
 
     if event == 'configurar':

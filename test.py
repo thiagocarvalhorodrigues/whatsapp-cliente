@@ -30,22 +30,30 @@
 from datetime import datetime
 import time
 
-now1 = datetime.now()
-while True:
-    current_time = now1.strftime("%H:%M:%S")
-    print("Current Time =", current_time)
+# now1 = datetime.now()
+# while True:
+#     current_time = now1.strftime("%H:%M:%S")
+#     print("Current Time =", current_time)
+#
+#     now2 = datetime.now()
+#     current_time2 = now2.strftime("%H:%M:%S")
+#     print("Current Time =", current_time2)
+#
+#     seconds = int((now2 - now1).total_seconds())
+#     print(seconds)
+#     if seconds == 5:
+#         now3 = datetime.now()
+#         current_time3 = now3.strftime("%H:%M:%S")
+#         print("Stop -> Current Time =", current_time3)
+#         break
+#
+#
+#
+from tags.tag import Tag
 
-    now2 = datetime.now()
-    current_time2 = now2.strftime("%H:%M:%S")
-    print("Current Time =", current_time2)
 
-    seconds = int((now2 - now1).total_seconds())
-    print(seconds)
-    if seconds == 5:
-        now3 = datetime.now()
-        current_time3 = now3.strftime("%H:%M:%S")
-        print("Stop -> Current Time =", current_time3)
-        break
+def main():
+    print(Tag.QRCODE_SCANNER.value)
 
-
-
+if __name__ == "__main__":
+    main()
