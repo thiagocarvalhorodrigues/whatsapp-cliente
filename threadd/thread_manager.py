@@ -54,17 +54,15 @@ def enviar_mensagem(bot, numero_para_enviar_mensagem, response, text_string):
             print('numero_para_enviar_mensagem -->', numero_para_enviar_mensagem)
             template_texto = fstr(text_string, numero_para_enviar_mensagem)
             template_response = fstr(response, numero_para_enviar_mensagem)
-            time.sleep(random.randrange(5, 10, 1))
+            time.sleep(random.randrange(3, 30, 3))
             bot.send_msg(f'https://web.whatsapp.com/send?phone={numero_para_enviar_mensagem[0]}&text={urllib.parse.quote_plus(template_texto)}',template_response)
             print(f' {numero_para_enviar_mensagem[0]} - 1º contato----THIAGOOOOOOO')
-            time.sleep(5)  ## tempo de esperar para enviar a mensagem para outro cliente.
 
             if bot.file_foto == '':
                 pass
             else:
                 bot.foto()
-                time.sleep(20)
-
+                time.sleep(10)
 
             bot.driver.get('https://web.whatsapp.com/')
 

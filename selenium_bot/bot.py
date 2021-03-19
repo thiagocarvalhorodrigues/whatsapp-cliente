@@ -100,9 +100,6 @@ class wppbot:
             pass
 
 
-        else:
-            pass
-
               # funcao_warning('FUNÇÃO SEND_MSG, NÚMERO VÁLIDO NO WHATS ')
 
     def close_drive(self):
@@ -217,25 +214,28 @@ class wppbot:
                         self.driver.get(f'https://web.whatsapp.com/send?phone={number}&text={msg}')
                         time.sleep(5)
 
-                        while True:
-                            try:
-                                botao_enviar = self.driver.find_element_by_xpath(Tag.TAG_BOTAO_ENVIAR2.value)
-                                botao_enviar.click()
-                                time.sleep(2)
 
-                                if self.file_foto_resposta == "":
-                                    pass
-                                else:
-                                    self.foto_resposta()
-                                time.sleep(3)
-
-                                self.driver.get(Tag.SITE.value)
+                        try:
+                            botao_enviar = self.driver.find_element_by_xpath(Tag.TAG_BOTAO_ENVIAR2.value)
+                            botao_enviar.click()
+                            time.sleep(2)
 
 
+                            time.sleep(3)
+                            if self.file_foto_resposta == "":
+                                pass
+                            else:
+                                self.foto_resposta()
+                                time.sleep(10)
 
-                                break
-                            except:
-                              pass
+
+                            self.driver.get(Tag.SITE.value)
+                        except:
+                            pass
+
+
+
+
 
             except:
                 pass
@@ -369,7 +369,6 @@ class wppbot:
         time.sleep(5)
 
         #legenda##
-        self.legenda_arquivos()
         self.legenda()
 
 
@@ -392,7 +391,9 @@ class wppbot:
         time.sleep(5)
 
         # legenda##
+
         self.legenda()
+
 
 
     def verificando_profile(self, profile_id=0):
@@ -407,19 +408,29 @@ class wppbot:
             return self.numero_da_conta[profile_id]
 
     def legenda(self):
-        legenda = self.driver.find_element_by_xpath(Tag.LEGENDA_CLICA_NO_XPATH.value)
-        legenda_mensagem = (f'{self.file_legenda}')
-        time.sleep(10)
-        legenda.send_keys(legenda_mensagem)
-        time.sleep(10)
-        enviar = self.driver.find_element_by_xpath(Tag.LEGENDA_ENVIAR.value)
-        enviar.click()
-        time.sleep(5)
 
-    def legenda_arquivos(self):
-        legenda = self.driver.find_element_by_xpath(Tag.LEGENDA_CLICA_NO_XPATH.value)
-        if legenda is not None:
-            enviar = self.driver.find_element_by_xpath(Tag.LEGENDA_ENVIAR.value)
-            enviar.click()
-            time.sleep(5)
+
+        while True:
+            try:
+                legenda = self.driver.find_element_by_xpath(Tag.LEGENDA_CLICA_NO_XPATH.value)
+                legenda_mensagem = (f'{self.file_legenda}')
+                time.sleep(10)
+                legenda.send_keys(legenda_mensagem)
+                time.sleep(10)
+                enviar = self.driver.find_element_by_xpath(Tag.LEGENDA_ENVIAR.value)
+                enviar.click()
+                time.sleep(10)
+                enviar = self.driver.find_element_by_xpath(Tag.LEGENDA_ENVIAR.value)
+                enviar.click()
+                time.sleep(10)
+                break
+
+            except:
+                enviar = self.driver.find_element_by_xpath(Tag.LEGENDA_ENVIAR.value)
+                enviar.click()
+                time.sleep(10)
+
+
+
+
 
